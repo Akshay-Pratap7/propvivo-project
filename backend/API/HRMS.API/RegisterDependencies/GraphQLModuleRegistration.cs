@@ -7,6 +7,11 @@ using DocumentsFeature.GraphQL;
 using PayrollFeature.GraphQL;
 using ExpensesFeature.GraphQL;
 using TeamFeature.GraphQL;
+using AnnouncementsFeature.GraphQL;
+using PerformanceFeature.GraphQL;
+using TrainingFeature.GraphQL;
+using RecognitionFeature.GraphQL;
+using ContributionsFeature.GraphQL;
 
 namespace HRMS.API.RegisterDependencies
 {
@@ -21,7 +26,12 @@ namespace HRMS.API.RegisterDependencies
                 .AddDocumentsGraphQL()
                 .AddPayrollGraphQL()
                 .AddExpensesGraphQL()
-                .AddTeamGraphQL();
+                .AddTeamGraphQL()
+                .AddAnnouncementsGraphQL() 
+                .AddPerformanceGraphQL()
+                .AddTrainingGraphQL()
+                .AddRecognitionGraphQL()
+                .AddContributionsGraphQL();
         }
     }
 }

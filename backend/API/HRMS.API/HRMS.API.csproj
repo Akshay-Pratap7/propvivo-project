@@ -32,6 +32,22 @@
     <ProjectReference Include="..\..\Modules\ExpensesFeature\ExpensesFeature.Infrastructure\ExpensesFeature.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\TeamFeature\TeamFeature.GraphQL\TeamFeature.GraphQL.csproj" />
     <ProjectReference Include="..\..\Modules\TeamFeature\TeamFeature.Infrastructure\TeamFeature.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\AnnouncementsFeature\AnnouncementsFeature.GraphQL\AnnouncementsFeature.GraphQL.csproj" />
+    <ProjectReference Include="..\..\Modules\AnnouncementsFeature\AnnouncementsFeature.Infrastructure\AnnouncementsFeature.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\PerformanceFeature\PerformanceFeature.GraphQL\PerformanceFeature.GraphQL.csproj" />
+    <ProjectReference Include="..\..\Modules\PerformanceFeature\PerformanceFeature.Infrastructure\PerformanceFeature.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\TrainingFeature\TrainingFeature.GraphQL\TrainingFeature.GraphQL.csproj" />
+    <ProjectReference Include="..\..\Modules\TrainingFeature\TrainingFeature.Infrastructure\TrainingFeature.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\RecognitionFeature\RecognitionFeature.GraphQL\RecognitionFeature.GraphQL.csproj" />
+    <ProjectReference Include="..\..\Modules\RecognitionFeature\RecognitionFeature.Infrastructure\RecognitionFeature.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\ContributionsFeature\ContributionsFeature.GraphQL\ContributionsFeature.GraphQL.csproj" />
+    <ProjectReference Include="..\..\Modules\ContributionsFeature\ContributionsFeature.Infrastructure\ContributionsFeature.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\RecruitmentFeature\RecruitmentFeature.GraphQL\RecruitmentFeature.GraphQL.csproj" />
+    <ProjectReference Include="..\..\Modules\RecruitmentFeature\RecruitmentFeature.Infrastructure\RecruitmentFeature.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\AnalyticsFeature\AnalyticsFeature.GraphQL\AnalyticsFeature.GraphQL.csproj" />
+    <ProjectReference Include="..\..\Modules\AnalyticsFeature\AnalyticsFeature.Infrastructure\AnalyticsFeature.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\OnboardingFeature\OnboardingFeature.GraphQL\OnboardingFeature.GraphQL.csproj" />
+    <ProjectReference Include="..\..\Modules\OnboardingFeature\OnboardingFeature.Infrastructure\OnboardingFeature.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Shared\HRMS.Shared.Infrastructure\HRMS.Shared.Infrastructure.csproj" />
   </ItemGroup>
 

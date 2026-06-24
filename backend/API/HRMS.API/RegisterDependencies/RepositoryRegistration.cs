@@ -6,6 +6,11 @@ using DocumentsFeature.Infrastructure;
 using PayrollFeature.Infrastructure;
 using ExpensesFeature.Infrastructure;
 using TeamFeature.Infrastructure;
+using AnnouncementsFeature.Infrastructure;
+using PerformanceFeature.Infrastructure;
+using TrainingFeature.Infrastructure;
+using RecognitionFeature.Infrastructure;
+using ContributionsFeature.Infrastructure;
 
 namespace HRMS.API.RegisterDependencies
 {
@@ -21,6 +26,11 @@ namespace HRMS.API.RegisterDependencies
             services.AddPayrollDependency(configuration);
             services.AddExpenseDependency(configuration);
             services.AddTeamDependency(configuration);
+            services.AddAnnouncementDependency(configuration);
+            services.AddPerformanceDependency(configuration);
+            services.AddTrainingDependency(configuration);
+            services.AddRecognitionDependency(configuration);
+            services.AddContributionsDependency(configuration);
             return services;
         }
     }

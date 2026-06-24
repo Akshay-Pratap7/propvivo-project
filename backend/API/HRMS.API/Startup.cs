@@ -12,6 +12,11 @@ using DocumentsFeature.Application.DTO;
 using PayrollFeature.Application.DTO;
 using ExpensesFeature.Application.DTO;
 using TeamFeature.Application.DTO;
+using AnnouncementsFeature.Application.DTO;
+using PerformanceFeature.Application.DTO;
+using TrainingFeature.Application.DTO;
+using RecognitionFeature.Application.DTO;
+using ContributionsFeature.Application.DTO;
 
 namespace HRMS.API
 {
@@ -108,7 +113,7 @@ namespace HRMS.API
             // exhaustion and memory leaks from creating new HttpClient instances
             services.AddHttpClient();
 
-            services.AddInjectionApplication(configuration, [typeof(CreateTodoHandler).Assembly, typeof(CreateDocumentHandler).Assembly, typeof(CreatePayrollHandler).Assembly, typeof(CreateExpenseHandler).Assembly, typeof(CreateTeamMemberHandler).Assembly]);
+            services.AddInjectionApplication(configuration, [typeof(CreateTodoHandler).Assembly, typeof(CreateDocumentHandler).Assembly, typeof(CreatePayrollHandler).Assembly, typeof(CreateExpenseHandler).Assembly, typeof(CreateTeamMemberHandler).Assembly, typeof(CreateAnnouncementHandler).Assembly, typeof(PerformanceFeature.Application.DTO.GoalDto).Assembly, typeof(TrainingFeature.Domain.TrainingModule).Assembly, typeof(RecognitionFeature.Domain.Recognition).Assembly, typeof(ContributionsFeature.Domain.ValueContribution).Assembly]);
             services.AddInjectionPostgres(configuration);
             services.AddModulesDependencyInjection(configuration);
 
