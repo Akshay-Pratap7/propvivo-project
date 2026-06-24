@@ -1,6 +1,7 @@
 ﻿using TodoFeature.Infrastructure;
 using UserFeature.Infrastructure;
 using AttendanceFeature.Infrastructure;
+using LeaveFeature.Infrastructure;
 
 namespace HRMS.API.RegisterDependencies
 {
@@ -11,6 +12,7 @@ namespace HRMS.API.RegisterDependencies
             services.AddTodoDependency(configuration);
             services.AddUserDependency(configuration);
             services.AddAttendanceDependency(configuration);
+            services.AddLeaveDependency(configuration);
             return services;
         }
     }
