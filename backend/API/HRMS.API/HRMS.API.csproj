@@ -24,6 +24,8 @@
     <ProjectReference Include="..\..\Modules\AttendanceFeature\AttendanceFeature.Infrastructure\AttendanceFeature.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\LeaveFeature\LeaveFeature.GraphQL\LeaveFeature.GraphQL.csproj" />
     <ProjectReference Include="..\..\Modules\LeaveFeature\LeaveFeature.Infrastructure\LeaveFeature.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\DocumentsFeature\DocumentsFeature.GraphQL\DocumentsFeature.GraphQL.csproj" />
+    <ProjectReference Include="..\..\Modules\DocumentsFeature\DocumentsFeature.Infrastructure\DocumentsFeature.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Shared\HRMS.Shared.Infrastructure\HRMS.Shared.Infrastructure.csproj" />
   </ItemGroup>
 

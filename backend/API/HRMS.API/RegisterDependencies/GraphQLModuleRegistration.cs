@@ -3,6 +3,7 @@ using TodoFeature.GraphQL;
 using UserFeature.GraphQL;
 using AttendanceFeature.GraphQL;
 using LeaveFeature.GraphQL;
+using DocumentsFeature.GraphQL;
 
 namespace HRMS.API.RegisterDependencies
 {
@@ -13,7 +14,8 @@ namespace HRMS.API.RegisterDependencies
             return builder.AddTodosGraphQL()
                 .AddUserGraphQL()
                 .AddAttendanceGraphQL()
-                .AddLeaveGraphQL();
+                .AddLeaveGraphQL()
+                .AddDocumentsGraphQL();
         }
     }
 }
