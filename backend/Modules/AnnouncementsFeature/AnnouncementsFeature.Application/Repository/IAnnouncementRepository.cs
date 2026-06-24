@@ -1,6 +1,7 @@
 using AnnouncementsFeature.Application.DTO;
 using AnnouncementsFeature.Domain;
 using HRMS.Core.Postgres.Interfaces;
+using HRMS.Core.Postgres.Repositories;
 using System.Linq.Expressions;
 
 using HRMS.Core.Postgres.Repositories;

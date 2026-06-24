@@ -1,5 +1,6 @@
 using TeamFeature.Application.Repository;
 using HRMS.Core.Postgres.Interfaces;
+using HRMS.Core.Postgres.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

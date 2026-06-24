@@ -1,4 +1,5 @@
 using HRMS.Core.Postgres.Common;
+using HRMS.Core.Postgres.Interfaces;
 using HRMS.Core.Postgres.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

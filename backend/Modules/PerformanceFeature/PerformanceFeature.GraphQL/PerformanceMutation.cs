@@ -1,3 +1,4 @@
+using HotChocolate.Types;
 using HotChocolate;
 using HotChocolate;
 using PerformanceFeature.Application.DTO;

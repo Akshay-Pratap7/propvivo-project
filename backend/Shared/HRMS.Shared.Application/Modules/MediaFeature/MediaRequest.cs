@@ -1,4 +1,5 @@
 ﻿using HRMS.Core.Postgres.Common;
+using HRMS.Core.Postgres.Interfaces;
 using HRMS.Shared.Application.DTOs;
 using HRMS.Shared.Domain.Enum;
 using MediatR;

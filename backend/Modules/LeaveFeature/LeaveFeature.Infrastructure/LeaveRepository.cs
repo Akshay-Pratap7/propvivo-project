@@ -2,6 +2,7 @@ using HRMS.Core.Postgres.Helper;
 using HRMS.Core.Postgres.Data;
 using HRMS.Core.Postgres.Interfaces;
 using HRMS.Core.Postgres.Repositories;
+using HRMS.Core.Postgres.Repositories;
 using HRMS.Core.Telemetry;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;

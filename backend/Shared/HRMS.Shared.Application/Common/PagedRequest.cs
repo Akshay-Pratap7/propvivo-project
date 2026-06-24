@@ -1,4 +1,5 @@
 using HRMS.Core.Postgres.Common;
+using HRMS.Core.Postgres.Interfaces;
 namespace HRMS.Shared.Application.Common
 {
     public class PagedRequest : Request

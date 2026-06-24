@@ -1,4 +1,5 @@
 using HRMS.Core.Postgres.Common;
+using HRMS.Core.Postgres.Interfaces;
 using System;
 
 namespace RecognitionFeature.Domain

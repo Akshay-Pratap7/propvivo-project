@@ -1,5 +1,6 @@
 using AutoMapper;
 using HRMS.Core.Postgres.Common;
+using HRMS.Core.Postgres.Interfaces;
 using HRMS.Shared.Application.Extensions;
 using Microsoft.AspNetCore.Http;
 
