@@ -15,8 +15,8 @@ namespace ExpensesFeature.Application.DTO
 
     public class ApproveExpenseHandler : IRequestHandler<ApproveExpenseRequest, bool>
     {
-        private readonly IExpensesRepository _repository;
-        public ApproveExpenseHandler(IExpensesRepository repository) => _repository = repository;
+        private readonly IExpenseRepository _repository;
+        public ApproveExpenseHandler(IExpenseRepository repository) => _repository = repository;
 
         public async Task<bool> Handle(ApproveExpenseRequest request, CancellationToken cancellationToken)
         {

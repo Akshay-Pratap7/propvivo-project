@@ -13,12 +13,12 @@ namespace RecognitionFeature.Application.DTO
         public DateTime CreatedOn { get; set; }
     }
 
-    public class CreateRecognitionRequest
+    public partial class CreateRecognitionRequest
     {
         public string? ReceiverId { get; set; }
         public string? Message { get; set; }
         public string? Category { get; set; }
     }
 
-    public class GetAllRecognitionsRequest : PagedRequest { }
+    public partial class GetAllRecognitionsRequest : PagedRequest { }
 }

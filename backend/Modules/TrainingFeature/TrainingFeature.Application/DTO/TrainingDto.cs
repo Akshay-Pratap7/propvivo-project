@@ -13,7 +13,7 @@ namespace TrainingFeature.Application.DTO
         public bool IsMandatory { get; set; }
     }
 
-    public class CreateTrainingModuleRequest
+    public partial class CreateTrainingModuleRequest
     {
         public string? Title { get; set; }
         public string? Description { get; set; }
@@ -22,5 +22,5 @@ namespace TrainingFeature.Application.DTO
         public bool IsMandatory { get; set; }
     }
 
-    public class GetAllTrainingModulesRequest : PagedRequest { }
+    public partial class GetAllTrainingModulesRequest : PagedRequest { }
 }

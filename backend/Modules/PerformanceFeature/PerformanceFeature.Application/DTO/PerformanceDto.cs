@@ -18,7 +18,7 @@ namespace PerformanceFeature.Application.DTO
         public DateTime EndDate { get; set; }
     }
 
-    public class CreateGoalRequest
+    public partial class CreateGoalRequest
     {
         public string? UserId { get; set; }
         public string? Title { get; set; }
@@ -30,7 +30,7 @@ namespace PerformanceFeature.Application.DTO
         public DateTime EndDate { get; set; }
     }
 
-    public class GetAllGoalsRequest : PagedRequest
+    public partial class GetAllGoalsRequest : PagedRequest
     {
         public string? UserId { get; set; }
         public string? Status { get; set; }

@@ -2,9 +2,10 @@ using HRMS.Core.Postgres.Common;
 using System.Linq.Expressions;
 using PostgresBaseEntity = HRMS.Core.Postgres.Common.BaseEntity;
 
+using HRMS.Core.Postgres.Repositories;
 namespace HRMS.Core.Postgres.Repositories
 {
-    public interface IPostgresRepository<T> where T : PostgresBaseEntity
+    public interface IPostgresDbRepository<T> where T : PostgresBaseEntity
     {
         Task<T> AddItemAsync(T item);
 

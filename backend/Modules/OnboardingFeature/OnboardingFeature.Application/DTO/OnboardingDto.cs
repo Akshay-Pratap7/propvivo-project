@@ -12,12 +12,12 @@ namespace OnboardingFeature.Application.DTO
         public bool IsCompleted { get; set; }
     }
 
-    public class CreateOnboardingTaskRequest
+    public partial class CreateOnboardingTaskRequest
     {
         public string? UserId { get; set; }
         public string? Phase { get; set; }
         public string? Title { get; set; }
     }
 
-    public class GetAllOnboardingTasksRequest : PagedRequest { }
+    public partial class GetAllOnboardingTasksRequest : PagedRequest { }
 }

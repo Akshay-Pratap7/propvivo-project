@@ -11,7 +11,7 @@ using PostgresBaseEntity = HRMS.Core.Postgres.Common.BaseEntity;
 
 namespace HRMS.Core.Postgres.Repositories
 {
-    public abstract class PostgresDbRepository<T> : IPostgresRepository<T>, ITableContext<T> where T : PostgresBaseEntity
+    public abstract class PostgresDbRepository<T> : IPostgresDbRepository<T>, ITableContext<T> where T : PostgresBaseEntity
     {
         protected readonly PostgresDbContext _context;
         protected readonly DbSet<T> _dbSet;

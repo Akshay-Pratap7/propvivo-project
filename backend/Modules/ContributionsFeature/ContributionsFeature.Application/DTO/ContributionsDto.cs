@@ -14,12 +14,12 @@ namespace ContributionsFeature.Application.DTO
         public string? Status { get; set; }
     }
 
-    public class CreateContributionRequest
+    public partial class CreateContributionRequest
     {
         public string? Title { get; set; }
         public string? Description { get; set; }
         public string? Category { get; set; }
     }
 
-    public class GetAllContributionsRequest : PagedRequest { }
+    public partial class GetAllContributionsRequest : PagedRequest { }
 }

@@ -12,11 +12,11 @@ namespace AnalyticsFeature.Application.DTO
         public DateTime GeneratedDate { get; set; }
     }
 
-    public class GenerateReportRequest
+    public partial class GenerateReportRequest
     {
         public string? Title { get; set; }
         public string? Category { get; set; }
     }
 
-    public class GetAllReportsRequest : PagedRequest { }
+    public partial class GetAllReportsRequest : PagedRequest { }
 }

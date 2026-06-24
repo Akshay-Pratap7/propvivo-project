@@ -13,7 +13,7 @@ namespace RecruitmentFeature.Application.DTO
         public string? Status { get; set; }
     }
 
-    public class CreateJobPostingRequest
+    public partial class CreateJobPostingRequest
     {
         public string? Title { get; set; }
         public string? Description { get; set; }
@@ -21,5 +21,5 @@ namespace RecruitmentFeature.Application.DTO
         public string? Location { get; set; }
     }
 
-    public class GetAllJobPostingsRequest : PagedRequest { }
+    public partial class GetAllJobPostingsRequest : PagedRequest { }
 }

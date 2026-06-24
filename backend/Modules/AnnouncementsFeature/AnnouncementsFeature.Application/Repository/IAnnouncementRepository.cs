@@ -3,6 +3,7 @@ using AnnouncementsFeature.Domain;
 using HRMS.Core.Postgres.Interfaces;
 using System.Linq.Expressions;
 
+using HRMS.Core.Postgres.Repositories;
 namespace AnnouncementsFeature.Application.Repository
 {
     public interface IAnnouncementRepository : IPostgresDbRepository<Announcement>

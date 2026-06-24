@@ -21,7 +21,7 @@ namespace AnnouncementsFeature.Application.DTO
         public string? CreatedByUserName { get; set; }
     }
 
-    public class CreateAnnouncementRequest
+    public partial class CreateAnnouncementRequest
     {
         public string? Title { get; set; }
         public string? Content { get; set; }
@@ -32,7 +32,7 @@ namespace AnnouncementsFeature.Application.DTO
         public DateTime? ExpiryDate { get; set; }
     }
 
-    public class GetAllAnnouncementsRequest : PagedRequest
+    public partial class GetAllAnnouncementsRequest : PagedRequest
     {
         public AnnouncementFilter? RequestParam { get; set; }
     }

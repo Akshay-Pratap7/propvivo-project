@@ -2,9 +2,10 @@ using HRMS.Core.Postgres.Repositories;
 using TodoFeature.Application.DTO;
 using TodoFeature.Domain;
 
+using HRMS.Core.Postgres.Repositories;
 namespace TodoFeature.Application.Repository
 {
-    public interface ITodoRepository : IPostgresRepository<Todo>
+    public interface ITodoRepository : IPostgresDbRepository<Todo>
     {
         Task<(IEnumerable<Todo> result, int count)> GetAllTodosWithCountAsync(GetAllTodosRequest request);
 
