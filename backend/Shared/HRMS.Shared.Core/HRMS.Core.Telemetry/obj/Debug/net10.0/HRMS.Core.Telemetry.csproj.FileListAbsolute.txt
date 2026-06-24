@@ -1,0 +1,16 @@
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.Telemetry/bin/Debug/net10.0/HRMS.Core.Telemetry.deps.json
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.Telemetry/bin/Debug/net10.0/HRMS.Core.Telemetry.dll
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.Telemetry/bin/Debug/net10.0/HRMS.Core.Telemetry.pdb
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.Telemetry/bin/Debug/net10.0/HRMS.Core.KeyVault.dll
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.Telemetry/bin/Debug/net10.0/HRMS.Core.KeyVault.pdb
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.Telemetry/obj/Debug/net10.0/HRMS.Core.Telemetry.csproj.AssemblyReference.cache
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.Telemetry/obj/Debug/net10.0/HRMS.Core.Telemetry.GeneratedMSBuildEditorConfig.editorconfig
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.Telemetry/obj/Debug/net10.0/HRMS.Core.Telemetry.AssemblyInfoInputs.cache
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.Telemetry/obj/Debug/net10.0/HRMS.Core.Telemetry.AssemblyInfo.cs
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.Telemetry/obj/Debug/net10.0/HRMS.Core.Telemetry.csproj.CoreCompileInputs.cache
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.Telemetry/obj/Debug/net10.0/HRMS.Core.Telemetry.sourcelink.json
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.Telemetry/obj/Debug/net10.0/HRMS.Cor.983119BD.Up2Date
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.Telemetry/obj/Debug/net10.0/HRMS.Core.Telemetry.dll
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.Telemetry/obj/Debug/net10.0/refint/HRMS.Core.Telemetry.dll
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.Telemetry/obj/Debug/net10.0/HRMS.Core.Telemetry.pdb
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.Telemetry/obj/Debug/net10.0/ref/HRMS.Core.Telemetry.dll

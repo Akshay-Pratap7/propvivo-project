@@ -1,0 +1,13 @@
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.KeyVault/bin/Debug/net10.0/HRMS.Core.KeyVault.deps.json
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.KeyVault/bin/Debug/net10.0/HRMS.Core.KeyVault.dll
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.KeyVault/bin/Debug/net10.0/HRMS.Core.KeyVault.pdb
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.KeyVault/obj/Debug/net10.0/HRMS.Core.KeyVault.csproj.AssemblyReference.cache
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.KeyVault/obj/Debug/net10.0/HRMS.Core.KeyVault.GeneratedMSBuildEditorConfig.editorconfig
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.KeyVault/obj/Debug/net10.0/HRMS.Core.KeyVault.AssemblyInfoInputs.cache
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.KeyVault/obj/Debug/net10.0/HRMS.Core.KeyVault.AssemblyInfo.cs
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.KeyVault/obj/Debug/net10.0/HRMS.Core.KeyVault.csproj.CoreCompileInputs.cache
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.KeyVault/obj/Debug/net10.0/HRMS.Core.KeyVault.sourcelink.json
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.KeyVault/obj/Debug/net10.0/HRMS.Core.KeyVault.dll
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.KeyVault/obj/Debug/net10.0/refint/HRMS.Core.KeyVault.dll
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.KeyVault/obj/Debug/net10.0/HRMS.Core.KeyVault.pdb
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.KeyVault/obj/Debug/net10.0/ref/HRMS.Core.KeyVault.dll

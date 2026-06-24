@@ -1,0 +1,13 @@
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Domain/bin/Debug/net10.0/HRMS.Shared.Domain.deps.json
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Domain/bin/Debug/net10.0/HRMS.Shared.Domain.dll
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Domain/bin/Debug/net10.0/HRMS.Shared.Domain.pdb
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Domain/obj/Debug/net10.0/HRMS.Shared.Domain.csproj.AssemblyReference.cache
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Domain/obj/Debug/net10.0/HRMS.Shared.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Domain/obj/Debug/net10.0/HRMS.Shared.Domain.AssemblyInfoInputs.cache
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Domain/obj/Debug/net10.0/HRMS.Shared.Domain.AssemblyInfo.cs
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Domain/obj/Debug/net10.0/HRMS.Shared.Domain.csproj.CoreCompileInputs.cache
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Domain/obj/Debug/net10.0/HRMS.Shared.Domain.sourcelink.json
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Domain/obj/Debug/net10.0/HRMS.Shared.Domain.dll
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Domain/obj/Debug/net10.0/refint/HRMS.Shared.Domain.dll
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Domain/obj/Debug/net10.0/HRMS.Shared.Domain.pdb
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Domain/obj/Debug/net10.0/ref/HRMS.Shared.Domain.dll

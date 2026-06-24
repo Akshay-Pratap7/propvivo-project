@@ -1,0 +1,13 @@
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.HttpHelper/bin/Debug/net10.0/HRMS.Core.HttpHelper.deps.json
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.HttpHelper/bin/Debug/net10.0/HRMS.Core.HttpHelper.dll
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.HttpHelper/bin/Debug/net10.0/HRMS.Core.HttpHelper.pdb
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.HttpHelper/obj/Debug/net10.0/HRMS.Core.HttpHelper.csproj.AssemblyReference.cache
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.HttpHelper/obj/Debug/net10.0/HRMS.Core.HttpHelper.GeneratedMSBuildEditorConfig.editorconfig
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.HttpHelper/obj/Debug/net10.0/HRMS.Core.HttpHelper.AssemblyInfoInputs.cache
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.HttpHelper/obj/Debug/net10.0/HRMS.Core.HttpHelper.AssemblyInfo.cs
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.HttpHelper/obj/Debug/net10.0/HRMS.Core.HttpHelper.csproj.CoreCompileInputs.cache
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.HttpHelper/obj/Debug/net10.0/HRMS.Core.HttpHelper.sourcelink.json
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.HttpHelper/obj/Debug/net10.0/HRMS.Core.HttpHelper.dll
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.HttpHelper/obj/Debug/net10.0/refint/HRMS.Core.HttpHelper.dll
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.HttpHelper/obj/Debug/net10.0/HRMS.Core.HttpHelper.pdb
+/home/ubuntu/vivo/backend/Shared/HRMS.Shared.Core/HRMS.Core.HttpHelper/obj/Debug/net10.0/ref/HRMS.Core.HttpHelper.dll
