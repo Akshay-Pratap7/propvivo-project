@@ -13,7 +13,7 @@ namespace HRCopilotFeature.Application.DTO
         public string? Content { get; set; }
     }
 
-    public class ChatRequest
+    public partial class ChatRequest
     {
         public string? ConversationId { get; set; }
         public string? Message { get; set; }
