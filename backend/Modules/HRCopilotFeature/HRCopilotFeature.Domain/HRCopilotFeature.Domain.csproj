@@ -6,5 +6,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Shared\HRMS.Shared.Domain\HRMS.Shared.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Shared\HRMS.Shared.Core\HRMS.Core.Postgres\HRMS.Core.Postgres.csproj" />
   </ItemGroup>
 </Project>
