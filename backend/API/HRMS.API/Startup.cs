@@ -1,5 +1,6 @@
 using HRMS.API.Extensions;
 using HRMS.API.Middleware;
+using HRMS.Core.Postgres;
 using HRMS.Core.Postgres.Data;
 using HRMS.Shared.Application.Extensions;
 using HRMS.Shared.Application.GraphQL;
@@ -14,6 +15,7 @@ using DocumentsFeature.Application.DTO;
 using PayrollFeature.Application.DTO;
 using ExpensesFeature.Application.DTO;
 using TeamFeature.Application.DTO;
+using HRMS.API.RegisterDependencies;
 using AnnouncementsFeature.Application.DTO;
 
 namespace HRMS.API
@@ -41,7 +43,12 @@ namespace HRMS.API
             
             _ = Task.Run(() =>
             {
-                try { app.EnsurePostgresDbIsCreated(); }
+                try
+                {
+                    using var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
+                    var context = serviceScope.ServiceProvider.GetRequiredService<PostgresDbContext>();
+                    context.Database.EnsureCreated();
+                }
                 catch { }
             });
 
@@ -57,9 +64,9 @@ namespace HRMS.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapGraphQL("/").WithOptions(new HotChocolate.AspNetCore.GraphQLServerOptions
+                endpoints.MapGraphQL("/graphql").WithOptions(options =>
                 {
-                    Tool = { Enable = enableGraphQLTool }
+                    options.Tool.Enable = enableGraphQLTool;
                 });
             });
         }

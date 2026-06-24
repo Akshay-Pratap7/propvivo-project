@@ -28,6 +28,7 @@ namespace HRMS.Shared.Infrastructure.Extensions
             services.AddTransient(typeof(BaseEntityAuditAction<,>));
             services.AddSingleton<ClaimsPrincipalExtensions>();
             services.AddSingleton<UserClaimCache>();
+            services.AddApplicationInsightsTelemetry(configuration);
             services.AddTelemetryService();
             services.AddHttpContextAccessor();
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
