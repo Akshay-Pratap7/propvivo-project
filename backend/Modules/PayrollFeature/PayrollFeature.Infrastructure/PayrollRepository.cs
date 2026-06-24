@@ -34,6 +34,12 @@ namespace PayrollFeature.Infrastructure
                 entity.HasIndex(e => e.PayPeriodEnd);
                 entity.OwnsOne(e => e.UserContext);
             });
+
+            modelBuilder.Entity<PayrollComponent>(entity => {
+                entity.ToTable("PayrollComponent");
+                entity.HasKey(e => e.Id);
+            
+            });
         }
     }
 

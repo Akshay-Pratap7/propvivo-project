@@ -10,6 +10,7 @@ using AnnouncementsFeature.Infrastructure;
 using PerformanceFeature.Infrastructure;
 using TrainingFeature.Infrastructure;
 using RecognitionFeature.Infrastructure;
+using HRCopilotFeature.Infrastructure;
 using ContributionsFeature.Infrastructure;
 
 namespace HRMS.API.RegisterDependencies
@@ -30,6 +31,7 @@ namespace HRMS.API.RegisterDependencies
             services.AddPerformanceDependency(configuration);
             services.AddTrainingDependency(configuration);
             services.AddRecognitionDependency(configuration);
+            services.AddCopilotDependency(configuration);
             services.AddContributionsDependency(configuration);
             return services;
         }

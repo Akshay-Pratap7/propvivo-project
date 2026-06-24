@@ -11,6 +11,7 @@ using AnnouncementsFeature.GraphQL;
 using PerformanceFeature.GraphQL;
 using TrainingFeature.GraphQL;
 using RecognitionFeature.GraphQL;
+using HRCopilotFeature.GraphQL;
 using ContributionsFeature.GraphQL;
 
 namespace HRMS.API.RegisterDependencies
@@ -26,6 +27,7 @@ namespace HRMS.API.RegisterDependencies
                 .AddDocumentsGraphQL()
                 .AddPayrollGraphQL()
                 .AddExpensesGraphQL()
+                .AddCopilotGraphQL()
                 .AddTeamGraphQL()
                 .AddAnnouncementsGraphQL() 
                 .AddPerformanceGraphQL()

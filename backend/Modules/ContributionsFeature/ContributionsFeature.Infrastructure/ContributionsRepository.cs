@@ -19,6 +19,12 @@ namespace ContributionsFeature.Infrastructure
                 entity.ToTable("ValueContribution");
                 entity.HasKey(e => e.Id);
             });
+
+            modelBuilder.Entity<ContributionItem>(entity => {
+                entity.ToTable("ContributionItem");
+                entity.HasKey(e => e.Id);
+            
+            });
         }
     }
 

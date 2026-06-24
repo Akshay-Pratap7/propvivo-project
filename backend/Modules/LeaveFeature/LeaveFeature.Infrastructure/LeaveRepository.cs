@@ -29,6 +29,12 @@ namespace LeaveFeature.Infrastructure
                 entity.HasIndex(e => e.Status);
                 entity.OwnsOne(e => e.UserContext);
             });
+
+            modelBuilder.Entity<LeaveBalance>(entity => {
+                entity.ToTable("LeaveBalance");
+                entity.HasKey(e => e.Id);
+            
+            });
         }
     }
 

@@ -41,7 +41,9 @@
     <ProjectReference Include="..\..\Modules\RecognitionFeature\RecognitionFeature.GraphQL\RecognitionFeature.GraphQL.csproj" />
     <ProjectReference Include="..\..\Modules\RecognitionFeature\RecognitionFeature.Infrastructure\RecognitionFeature.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\ContributionsFeature\ContributionsFeature.GraphQL\ContributionsFeature.GraphQL.csproj" />
+    <ProjectReference Include="..\..\Modules\HRCopilotFeature\HRCopilotFeature.GraphQL\HRCopilotFeature.GraphQL.csproj" />
     <ProjectReference Include="..\..\Modules\ContributionsFeature\ContributionsFeature.Infrastructure\ContributionsFeature.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\HRCopilotFeature\HRCopilotFeature.Infrastructure\HRCopilotFeature.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\RecruitmentFeature\RecruitmentFeature.GraphQL\RecruitmentFeature.GraphQL.csproj" />
     <ProjectReference Include="..\..\Modules\RecruitmentFeature\RecruitmentFeature.Infrastructure\RecruitmentFeature.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\AnalyticsFeature\AnalyticsFeature.GraphQL\AnalyticsFeature.GraphQL.csproj" />
