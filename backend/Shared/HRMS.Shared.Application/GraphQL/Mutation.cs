@@ -1,9 +1,7 @@
-﻿namespace HRMS.Shared.Application.GraphQL
+namespace HRMS.Shared.Application.GraphQL
 {
     public class Mutation
     {
-        public Mutation()
-        {
-        }
+        public string Ping() => "Pong";
     }
 }

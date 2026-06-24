@@ -1,9 +1,7 @@
-﻿namespace HRMS.Shared.Application.GraphQL
+namespace HRMS.Shared.Application.GraphQL
 {
     public class Query
     {
-        public Query()
-        {
-        }
+        public string Ping() => "Pong";
     }
 }

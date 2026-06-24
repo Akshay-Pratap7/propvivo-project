@@ -7,8 +7,8 @@ namespace HRMS.API.Extensions
         public static IApplicationBuilder AddMiddleware(this IApplicationBuilder app)
         {
             app.UseMiddleware<ExceptionMiddleware>();
-            app.UseMiddleware<LocalAPIMiddleware>();
-            app.UseMiddleware<IPAddressMiddleware>();
+            //app.UseMiddleware<LocalAPIMiddleware>();
+            //app.UseMiddleware<IPAddressMiddleware>();
             return app;
         }
     }
