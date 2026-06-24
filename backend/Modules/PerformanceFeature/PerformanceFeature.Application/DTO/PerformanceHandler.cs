@@ -29,17 +29,8 @@ namespace PerformanceFeature.Application.DTO
                 EndDate = request.EndDate
             };
             await _repository.AddItemAsync(entity);
-            return ToDto(entity);
+            return new GoalDto { Id = entity.Id, Title = entity.Title };
         }
-
-        private GoalDto ToDto(Goal entity) => new GoalDto
-        {
-            Id = entity.Id, UserId = entity.UserId, Title = entity.Title,
-            Description = entity.Description, Category = entity.Category,
-            Weight = entity.Weight, TargetValue = entity.TargetValue,
-            CurrentValue = entity.CurrentValue, Status = entity.Status,
-            StartDate = entity.StartDate, EndDate = entity.EndDate
-        };
     }
 
     public class GetAllGoalsHandler : IRequestHandler<GetAllGoalsRequest, PagedResponse<GoalDto>>
@@ -50,9 +41,7 @@ namespace PerformanceFeature.Application.DTO
         public async Task<PagedResponse<GoalDto>> Handle(GetAllGoalsRequest request, CancellationToken cancellationToken)
         {
             var (items, count) = await _repository.GetItemsWithCountAsync(x => x.DocumentType == nameof(Goal), request, x => x.CreatedOn);
-            return new PagedResponse<GoalDto>(items.Select(x => new GoalDto {
-                Id = x.Id, UserId = x.UserId, Title = x.Title, Status = x.Status
-            }), count, request.PageNumber, request.PageSize);
+            return new PagedResponse<GoalDto>(items.Select(x => new GoalDto { Id = x.Id, Title = x.Title }), count, request.PageNumber, request.PageSize);
         }
     }
 }
