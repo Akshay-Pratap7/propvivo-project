@@ -7,7 +7,8 @@ namespace PerformanceFeature.GraphQL
     {
         public static IRequestExecutorBuilder AddPerformanceGraphQL(this IRequestExecutorBuilder builder)
         {
-            return builder.AddTypeExtension<PerformanceQuery>();
+            return builder.AddTypeExtension<PerformanceQuery>()
+                          .AddTypeExtension<PerformanceMutation>();
         }
     }
 }
