@@ -5,19 +5,17 @@ using MediatR;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
 namespace RecognitionFeature.Application.DTO
 {
     public class CreateRecognitionHandler : IRequestHandler<CreateRecognitionRequest, RecognitionDto>
     {
         private readonly IRecognitionRepository _repository;
         public CreateRecognitionHandler(IRecognitionRepository repository) => _repository = repository;
-
         public async Task<RecognitionDto> Handle(CreateRecognitionRequest request, CancellationToken cancellationToken)
         {
             var entity = new Recognition
             {
-                ReceiverId = request.ReceiverId,
+                ToUserId = request.ReceiverId,
                 Message = request.Message,
                 Category = request.Category
             };
@@ -25,20 +23,17 @@ namespace RecognitionFeature.Application.DTO
             return new RecognitionDto { Id = entity.Id, Message = entity.Message };
         }
     }
-
     public class GetAllRecognitionsHandler : IRequestHandler<GetAllRecognitionsRequest, PagedResponse<RecognitionDto>>
     {
         private readonly IRecognitionRepository _repository;
         public GetAllRecognitionsHandler(IRecognitionRepository repository) => _repository = repository;
-
         public async Task<PagedResponse<RecognitionDto>> Handle(GetAllRecognitionsRequest request, CancellationToken cancellationToken)
         {
-            var (items, count) = await _repository.GetItemsWithCountAsync(x => x.DocumentType == nameof(Recognition), request, x => x.CreatedOn);
-            return new PagedResponse<RecognitionDto>(items.Select(x => new RecognitionDto { Id = x.Id, Message = x.Message }), count, request.PageNumber, request.PageSize);
+            var (items, count) = await _repository.GetItemsWithCountAsync(x => true, request, x => x.CreatedOn);
+            return new PagedResponse<RecognitionDto>(items.Select(x => new RecognitionDto { Id = x.Id, Message = x.Message }).ToList(), count, request.PageCriteria.Skip / request.PageCriteria.PageSize + 1, request.PageCriteria.PageSize);
         }
     }
 }
-
 namespace RecognitionFeature.Application.DTO
 {
     public partial class CreateRecognitionRequest : IRequest<RecognitionDto> { }

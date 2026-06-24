@@ -1,10 +1,8 @@
 using HRMS.Core.Postgres.Common;
 namespace HRMS.Shared.Application.Common
 {
-    public class PagedRequest
+    public class PagedRequest : Request
     {
-        public PageCriteria? PageCriteria { get; set; } = new PageCriteria();
-        public OrderByCriteria? OrderByCriteria { get; set; } = new OrderByCriteria();
     }
 
     public class PagedResponse<T>
@@ -13,5 +11,15 @@ namespace HRMS.Shared.Application.Common
         public int TotalCount { get; set; }
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
+
+        public PagedResponse() { }
+
+        public PagedResponse(List<T> items, int count, int pageNumber, int pageSize)
+        {
+            Items = items;
+            TotalCount = count;
+            PageNumber = pageNumber;
+            PageSize = pageSize;
+        }
     }
 }

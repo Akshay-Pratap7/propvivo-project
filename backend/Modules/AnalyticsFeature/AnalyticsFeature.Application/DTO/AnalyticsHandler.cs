@@ -35,7 +35,7 @@ namespace AnalyticsFeature.Application.DTO
         public async Task<PagedResponse<AnalyticsReportDto>> Handle(GetAllReportsRequest request, CancellationToken cancellationToken)
         {
             var (items, count) = await _repository.GetItemsWithCountAsync(x => x.DocumentType == nameof(AnalyticsReport), request, x => x.CreatedOn);
-            return new PagedResponse<AnalyticsReportDto>(items.Select(x => new AnalyticsReportDto { Id = x.Id, Title = x.Title }), count, request.PageNumber, request.PageSize);
+            return new PagedResponse<AnalyticsReportDto>(items.Select(x => new AnalyticsReportDto { Id = x.Id, Title = x.Title }), count, request.PageCriteria.Skip / request.PageCriteria.PageSize + 1, request.PageCriteria.PageSize);
         }
     }
 }
