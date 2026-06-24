@@ -1,4 +1,6 @@
 using HRMS.Core.Postgres.Repositories;
+using HRMS.Core.Postgres.Interfaces;
+using HRMS.Core.Postgres.Repositories;
 using TeamFeature.Application.DTO;
 using TeamFeature.Domain;
 

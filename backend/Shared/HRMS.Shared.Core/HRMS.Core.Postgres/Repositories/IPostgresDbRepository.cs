@@ -1,3 +1,5 @@
+using HRMS.Core.Postgres.Repositories;
+using HRMS.Core.Postgres.Interfaces;
 using HRMS.Core.Postgres.Common;
 using HRMS.Core.Postgres.Interfaces;
 using System.Linq.Expressions;

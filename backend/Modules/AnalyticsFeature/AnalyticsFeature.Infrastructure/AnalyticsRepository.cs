@@ -1,4 +1,4 @@
-using HRMS.Core.Postgres.Interfaces;
+using HRMS.Core.Postgres.Repositories;
 using AnalyticsFeature.Application.Repository;
 using AnalyticsFeature.Domain;
 using HRMS.Core.Postgres.Data;

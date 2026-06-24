@@ -1,3 +1,5 @@
+using HRMS.Core.Postgres.Repositories;
+using HRMS.Core.Postgres.Interfaces;
 using AnnouncementsFeature.Application.DTO;
 using AnnouncementsFeature.Domain;
 using HRMS.Core.Postgres.Interfaces;

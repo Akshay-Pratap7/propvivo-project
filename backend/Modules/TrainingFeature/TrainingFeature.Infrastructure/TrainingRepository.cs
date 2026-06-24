@@ -1,3 +1,5 @@
+using HRMS.Core.Postgres.Repositories;
+using HRMS.Core.Postgres.Interfaces;
 using TrainingFeature.Application.Repository;
 using TrainingFeature.Domain;
 using HRMS.Core.Postgres.Data;
