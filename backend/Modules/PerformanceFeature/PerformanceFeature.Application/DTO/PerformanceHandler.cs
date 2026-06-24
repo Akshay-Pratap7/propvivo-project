@@ -41,7 +41,7 @@ namespace PerformanceFeature.Application.DTO
         public async Task<PagedResponse<GoalDto>> Handle(GetAllGoalsRequest request, CancellationToken cancellationToken)
         {
             var (items, count) = await _repository.GetItemsWithCountAsync(x => x.DocumentType == nameof(Goal), request, x => x.CreatedOn);
-            return new PagedResponse<GoalDto>(items.Select(x => new GoalDto { Id = x.Id, Title = x.Title }), count, request.PageCriteria.Skip / request.PageCriteria.PageSize + 1, request.PageCriteria.PageSize);
+            return new PagedResponse<GoalDto>(items.Select(x => new GoalDto { Id = x.Id, Title = x.Title }).ToList(), count, request.PageCriteria.Skip / request.PageCriteria.PageSize + 1, request.PageCriteria.PageSize);
         }
     }
 }

@@ -36,7 +36,7 @@ namespace TrainingFeature.Application.DTO
         public async Task<PagedResponse<TrainingModuleDto>> Handle(GetAllTrainingModulesRequest request, CancellationToken cancellationToken)
         {
             var (items, count) = await _repository.GetItemsWithCountAsync(x => x.DocumentType == nameof(TrainingModule), request, x => x.CreatedOn);
-            return new PagedResponse<TrainingModuleDto>(items.Select(x => new TrainingModuleDto { Id = x.Id, Title = x.Title }), count, request.PageCriteria.Skip / request.PageCriteria.PageSize + 1, request.PageCriteria.PageSize);
+            return new PagedResponse<TrainingModuleDto>(items.Select(x => new TrainingModuleDto { Id = x.Id, Title = x.Title }).ToList(), count, request.PageCriteria.Skip / request.PageCriteria.PageSize + 1, request.PageCriteria.PageSize);
         }
     }
 }

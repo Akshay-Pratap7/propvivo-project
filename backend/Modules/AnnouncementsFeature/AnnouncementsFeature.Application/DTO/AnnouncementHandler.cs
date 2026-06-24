@@ -50,7 +50,7 @@ namespace AnnouncementsFeature.Application.DTO
         public async Task<PagedResponse<AnnouncementDto>> Handle(GetAllAnnouncementsRequest request, CancellationToken cancellationToken)
         {
             var (items, count) = await _repository.GetAllAnnouncementsWithCountAsync(request);
-            return new PagedResponse<AnnouncementDto>(items.Select(x => x.ToDto()), count, request.PageCriteria.Skip / request.PageCriteria.PageSize + 1, request.PageCriteria.PageSize);
+            return new PagedResponse<AnnouncementDto>(items.Select(x => x.ToDto()).ToList(), count, request.PageCriteria.Skip / request.PageCriteria.PageSize + 1, request.PageCriteria.PageSize);
         }
     }
 }

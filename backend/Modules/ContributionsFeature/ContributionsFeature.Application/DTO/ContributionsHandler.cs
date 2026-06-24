@@ -36,7 +36,7 @@ namespace ContributionsFeature.Application.DTO
         public async Task<PagedResponse<ValueContributionDto>> Handle(GetAllContributionsRequest request, CancellationToken cancellationToken)
         {
             var (items, count) = await _repository.GetItemsWithCountAsync(x => x.DocumentType == nameof(ValueContribution), request, x => x.CreatedOn);
-            return new PagedResponse<ValueContributionDto>(items.Select(x => new ValueContributionDto { Id = x.Id, Title = x.Title }), count, request.PageCriteria.Skip / request.PageCriteria.PageSize + 1, request.PageCriteria.PageSize);
+            return new PagedResponse<ValueContributionDto>(items.Select(x => new ValueContributionDto { Id = x.Id, Title = x.Title }).ToList(), count, request.PageCriteria.Skip / request.PageCriteria.PageSize + 1, request.PageCriteria.PageSize);
         }
     }
 }

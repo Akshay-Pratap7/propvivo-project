@@ -36,7 +36,7 @@ namespace RecruitmentFeature.Application.DTO
         public async Task<PagedResponse<JobPostingDto>> Handle(GetAllJobPostingsRequest request, CancellationToken cancellationToken)
         {
             var (items, count) = await _repository.GetItemsWithCountAsync(x => x.DocumentType == nameof(JobPosting), request, x => x.CreatedOn);
-            return new PagedResponse<JobPostingDto>(items.Select(x => new JobPostingDto { Id = x.Id, Title = x.Title }), count, request.PageCriteria.Skip / request.PageCriteria.PageSize + 1, request.PageCriteria.PageSize);
+            return new PagedResponse<JobPostingDto>(items.Select(x => new JobPostingDto { Id = x.Id, Title = x.Title }).ToList(), count, request.PageCriteria.Skip / request.PageCriteria.PageSize + 1, request.PageCriteria.PageSize);
         }
     }
 }
