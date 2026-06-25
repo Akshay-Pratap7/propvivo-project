@@ -4,6 +4,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTable, FilterConfig } from "../../components/table/DataTable";
 import { useMemo } from "react";
 import Link from "next/link";
+import { useQuery } from "@apollo/client/react";
+import { graphql } from "../../graphql/generated";
 
 type AttendanceRecord = {
   id: string;
@@ -15,45 +17,45 @@ type AttendanceRecord = {
   location: string;
 };
 
-const columns: ColumnDef<AttendanceRecord>[] = [
+const columns: any[] = [
   {
     accessorKey: "date",
     header: "Date",
-    cell: ({ getValue }) => {
-      const date = new Date(getValue<string>());
+    cell: ({ getValue }: any) => {
+      const date = new Date(getValue());
       return <span className="tabular-nums">{date.toLocaleDateString()}</span>;
     },
   },
   {
     accessorKey: "clockIn",
     header: "Clock In",
-    cell: ({ getValue }) => {
-      const time = getValue<string>();
+    cell: ({ getValue }: any) => {
+      const time = getValue();
       return <span className="tabular-nums">{time || "—"}</span>;
     },
   },
   {
     accessorKey: "clockOut",
     header: "Clock Out",
-    cell: ({ getValue }) => {
-      const time = getValue<string>();
+    cell: ({ getValue }: any) => {
+      const time = getValue();
       return <span className="tabular-nums">{time || "—"}</span>;
     },
   },
   {
     accessorKey: "workingHours",
     header: "Working Hours",
-    cell: ({ getValue }) => {
-      const hours = getValue<number>();
+    cell: ({ getValue }: any) => {
+      const hours = getValue();
       return <span className="tabular-nums">{hours.toFixed(2)}h</span>;
     },
   },
   {
     accessorKey: "status",
     header: "Status",
-    cell: ({ getValue }) => {
-      const status = getValue<AttendanceRecord["status"]>();
-      const colors: Record<AttendanceRecord["status"], string> = {
+    cell: ({ getValue }: any) => {
+      const status = getValue();
+      const colors: any = {
         present: "bg-green-100 text-green-800",
         absent: "bg-red-100 text-red-800",
         late: "bg-yellow-100 text-yellow-800",
@@ -73,43 +75,55 @@ const columns: ColumnDef<AttendanceRecord>[] = [
   },
 ];
 
-function generateMockData(): AttendanceRecord[] {
-  const data: AttendanceRecord[] = [];
-  const statuses: AttendanceRecord["status"][] = [
-    "present",
-    "absent",
-    "late",
-    "half-day",
-    "on-leave",
-  ];
-  const locations = ["Office", "WFH", "Field", "Client Site"];
-
-  for (let i = 0; i < 30; i++) {
-    const date = new Date();
-    date.setDate(date.getDate() - i);
-    const status = statuses[i % statuses.length];
-
-    data.push({
-      id: `att-${i}`,
-      date: date.toISOString().split("T")[0],
-      clockIn:
-        status === "absent" ? "—" : `${9 + Math.floor(Math.random() * 2)}:${Math.floor(Math.random() * 60).toString().padStart(2, "0")}`,
-      clockOut:
-        status === "absent" || status === "on-leave"
-          ? "—"
-          : `${17 + Math.floor(Math.random() * 2)}:${Math.floor(Math.random() * 60).toString().padStart(2, "0")}`,
-      status,
-      workingHours:
-        status === "absent" ? 0 : status === "half-day" ? 4 : 8 + Math.random() * 2,
-      location: locations[i % locations.length],
-    });
+const GET_ALL_ATTENDANCE = graphql(`
+  query GetAllAttendance($request: GetAllAttendanceRequestInput!) {
+    getAllAttendance(request: $request) {
+      data {
+        attendanceRecords {
+          id
+          employeeId
+          date
+          clockInTime
+          clockOutTime
+          status
+          totalHours
+          overtimeHours
+        }
+      }
+    }
   }
-
-  return data;
-}
+`);
 
 export default function AttendancePage() {
-  const data = useMemo(() => generateMockData(), []);
+  const { data: queryData, loading } = useQuery(GET_ALL_ATTENDANCE, {
+    variables: {
+      request: {
+        pageCriteria: {
+          enablePage: true,
+          pageSize: 100,
+          skip: 0
+        }
+      },
+    },
+  });
+
+  const data = useMemo(() => {
+    if (!queryData?.getAllAttendance?.data?.attendanceRecords) return [];
+    return queryData.getAllAttendance.data.attendanceRecords.map((record: any) => ({
+      id: record.id || "",
+      date: record.date ? new Date(record.date).toISOString().split("T")[0] : "",
+      clockIn: record.clockInTime
+        ? new Date(record.clockInTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+        : "—",
+      clockOut: record.clockOutTime
+        ? new Date(record.clockOutTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+        : "—",
+      status: (record.status?.toLowerCase() || "present") as AttendanceRecord["status"],
+      workingHours: record.totalHours || 0,
+      location: "Office",
+    }));
+  }, [queryData]);
+
 
   const filters: FilterConfig = [
     { type: "search", placeholder: "Search by location..." },
@@ -151,14 +165,20 @@ export default function AttendancePage() {
 
       {/* Main Content */}
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <DataTable<AttendanceRecord>
-          data={data}
-          columns={columns}
-          pageSizeOptions={[10, 20, 50]}
-          initialPageSize={10}
-          filters={filters}
-          className="rounded-md"
-        />
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <p className="text-slate-500">Loading attendance data...</p>
+          </div>
+        ) : (
+          <DataTable<AttendanceRecord>
+            data={data}
+            columns={columns}
+            pageSizeOptions={[10, 20, 50]}
+            initialPageSize={10}
+            filters={filters}
+            className="rounded-md"
+          />
+        )}
       </main>
     </div>
   );

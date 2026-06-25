@@ -1,7 +1,7 @@
 'use client';
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useSession } from "./context/SessionContext";
+import { useSession } from "../context/SessionContext";
 
 export default function Home() {
   const { isAuthenticated } = useSession();

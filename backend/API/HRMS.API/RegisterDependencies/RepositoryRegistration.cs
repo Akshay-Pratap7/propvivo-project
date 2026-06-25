@@ -1,4 +1,4 @@
-﻿using TodoFeature.Infrastructure;
+using TodoFeature.Infrastructure;
 using UserFeature.Infrastructure;
 using AttendanceFeature.Infrastructure;
 using LeaveFeature.Infrastructure;
@@ -12,6 +12,9 @@ using TrainingFeature.Infrastructure;
 using RecognitionFeature.Infrastructure;
 using HRCopilotFeature.Infrastructure;
 using ContributionsFeature.Infrastructure;
+using RecruitmentFeature.Infrastructure;
+using AnalyticsFeature.Infrastructure;
+using OnboardingFeature.Infrastructure;
 
 namespace HRMS.API.RegisterDependencies
 {
@@ -33,6 +36,9 @@ namespace HRMS.API.RegisterDependencies
             services.AddRecognitionDependency(configuration);
             services.AddCopilotDependency(configuration);
             services.AddContributionsDependency(configuration);
+            services.AddRecruitmentDependency(configuration);
+            services.AddAnalyticsDependency(configuration);
+            services.AddOnboardingDependency(configuration);
             return services;
         }
     }

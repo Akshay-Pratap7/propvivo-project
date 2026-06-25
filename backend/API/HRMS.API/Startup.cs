@@ -17,6 +17,9 @@ using ExpensesFeature.Application.DTO;
 using TeamFeature.Application.DTO;
 using HRMS.API.RegisterDependencies;
 using AnnouncementsFeature.Application.DTO;
+using RecruitmentFeature.Application.DTO;
+using AnalyticsFeature.Application.DTO;
+using OnboardingFeature.Application.DTO;
 
 namespace HRMS.API
 {
@@ -95,7 +98,10 @@ namespace HRMS.API
                 typeof(CreatePayrollHandler).Assembly,
                 typeof(CreateExpenseHandler).Assembly,
                 typeof(CreateTeamMemberHandler).Assembly,
-                typeof(CreateAnnouncementHandler).Assembly
+                typeof(CreateAnnouncementHandler).Assembly,
+                typeof(CreateJobPostingHandler).Assembly,
+                typeof(GenerateReportHandler).Assembly,
+                typeof(CreateOnboardingTaskHandler).Assembly
             ]);
 
             services.AddInjectionPostgres(configuration);

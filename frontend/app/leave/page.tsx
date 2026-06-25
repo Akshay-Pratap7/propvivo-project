@@ -4,6 +4,9 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTable, FilterConfig } from "../../components/table/DataTable";
 import { useMemo } from "react";
 import Link from "next/link";
+import { useQuery } from "@apollo/client/react";
+import { graphql } from "../../graphql/generated";
+
 
 type LeaveRequest = {
   id: string;
@@ -74,62 +77,51 @@ const columns: ColumnDef<LeaveRequest>[] = [
   },
 ];
 
-function generateMockData(): LeaveRequest[] {
-  const data: LeaveRequest[] = [];
-  const types: LeaveRequest["type"][] = [
-    "casual",
-    "sick",
-    "personal",
-    "maternity",
-    "paternity",
-    "lwp",
-    "comp-off",
-  ];
-  const statuses: LeaveRequest["status"][] = [
-    "pending",
-    "approved",
-    "rejected",
-    "cancelled",
-  ];
-  const reasons = [
-    "Personal work",
-    "Medical checkup",
-    "Family event",
-    "Travel",
-    "Emergency",
-    "Maternity leave",
-    "Paternity leave",
-  ];
-
-  for (let i = 0; i < 15; i++) {
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() + Math.floor(Math.random() * 30) - 15);
-    const endDate = new Date(startDate);
-    endDate.setDate(endDate.getDate() + Math.floor(Math.random() * 5) + 1);
-    const days = Math.ceil(
-      (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
-    );
-
-    data.push({
-      id: `leave-${i}`,
-      type: types[i % types.length],
-      startDate: startDate.toISOString().split("T")[0],
-      endDate: endDate.toISOString().split("T")[0],
-      days,
-      reason: reasons[i % reasons.length],
-      status: statuses[i % statuses.length],
-      approvedBy:
-        statuses[i % statuses.length] === "pending"
-          ? "Pending"
-          : "Manager Name",
-    });
+const GET_ALL_LEAVES = graphql(`
+  query GetAllLeaves($request: GetAllLeavesRequestInput!) {
+    getAllLeaves(request: $request) {
+      data {
+        leaves {
+          id
+          employeeId
+          leaveType
+          startDate
+          endDate
+          totalDays
+          status
+          reason
+        }
+      }
+    }
   }
-
-  return data;
-}
+`);
 
 export default function LeavePage() {
-  const data = useMemo(() => generateMockData(), []);
+  const { data: queryData, loading } = useQuery(GET_ALL_LEAVES, {
+    variables: {
+      request: {
+        pageCriteria: {
+          enablePage: true,
+          pageSize: 100,
+          skip: 0
+        }
+      },
+    },
+  });
+
+  const data = useMemo(() => {
+    if (!queryData?.getAllLeaves?.data?.leaves) return [];
+    return queryData.getAllLeaves.data.leaves.map((leave: any) => ({
+      id: leave.id || "",
+      type: (leave.leaveType?.toLowerCase() || "casual") as LeaveRequest["type"],
+      startDate: leave.startDate ? new Date(leave.startDate).toISOString().split("T")[0] : "",
+      endDate: leave.endDate ? new Date(leave.endDate).toISOString().split("T")[0] : "",
+      days: leave.totalDays || 0,
+      reason: leave.reason || "",
+      status: (leave.status?.toLowerCase() || "pending") as LeaveRequest["status"],
+      approvedBy: "Manager", // Mock
+    }));
+  }, [queryData]);
 
   const filters: FilterConfig = [
     { type: "search", placeholder: "Search by reason..." },
@@ -216,14 +208,20 @@ export default function LeavePage() {
 
       {/* Main Content */}
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <DataTable<LeaveRequest>
-          data={data}
-          columns={columns}
-          pageSizeOptions={[10, 20, 50]}
-          initialPageSize={10}
-          filters={filters}
-          className="rounded-md"
-        />
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <p className="text-slate-500">Loading leave data...</p>
+          </div>
+        ) : (
+          <DataTable<LeaveRequest>
+            data={data}
+            columns={columns}
+            pageSizeOptions={[10, 20, 50]}
+            initialPageSize={10}
+            filters={filters}
+            className="rounded-md"
+          />
+        )}
       </main>
     </div>
   );

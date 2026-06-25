@@ -1,4 +1,4 @@
-﻿using HotChocolate.Execution.Configuration;
+using HotChocolate.Execution.Configuration;
 using TodoFeature.GraphQL;
 using UserFeature.GraphQL;
 using AttendanceFeature.GraphQL;
@@ -13,6 +13,9 @@ using TrainingFeature.GraphQL;
 using RecognitionFeature.GraphQL;
 using HRCopilotFeature.GraphQL;
 using ContributionsFeature.GraphQL;
+using RecruitmentFeature.GraphQL;
+using AnalyticsFeature.GraphQL;
+using OnboardingFeature.GraphQL;
 
 namespace HRMS.API.RegisterDependencies
 {
@@ -33,7 +36,10 @@ namespace HRMS.API.RegisterDependencies
                 .AddPerformanceGraphQL()
                 .AddTrainingGraphQL()
                 .AddRecognitionGraphQL()
-                .AddContributionsGraphQL();
+                .AddContributionsGraphQL()
+                .AddRecruitmentGraphQL()
+                .AddAnalyticsGraphQL()
+                .AddOnboardingGraphQL();
         }
     }
 }

@@ -1,0 +1,1394 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Query {
+  ping: String!
+  allDocuments(request: GetAllDocumentsRequestInput!): BaseResponsePaginationOfGetAllDocumentsResponse!
+    @cost(weight: "10")
+  allPayrolls(request: GetAllPayrollsRequestInput!): BaseResponsePaginationOfGetAllPayrollsResponse!
+    @cost(weight: "10")
+  allExpenses(request: GetAllExpensesRequestInput!): BaseResponsePaginationOfGetAllExpensesResponse!
+    @cost(weight: "10")
+  allTeamMembers(request: GetAllTeamMembersRequestInput!): BaseResponsePaginationOfGetAllTeamMembersResponse!
+    @cost(weight: "10")
+  announcements(request: GetAllAnnouncementsRequestInput!): PagedResponseOfAnnouncementDto!
+    @cost(weight: "10")
+  goals(request: GetAllGoalsRequestInput!): PagedResponseOfGoalDto!
+    @cost(weight: "10")
+  trainingModules(request: GetAllTrainingModulesRequestInput!): PagedResponseOfTrainingModuleDto!
+    @cost(weight: "10")
+  recognitions(request: GetAllRecognitionsRequestInput!): PagedResponseOfRecognitionDto!
+    @cost(weight: "10")
+  contributions(request: GetAllContributionsRequestInput!): PagedResponseOfValueContributionDto!
+    @cost(weight: "10")
+  jobPostings(request: GetAllJobPostingsRequestInput!): PagedResponseOfJobPostingDto!
+    @cost(weight: "10")
+  analyticsReports(request: GetAllReportsRequestInput!): PagedResponseOfAnalyticsReportDto!
+    @cost(weight: "10")
+  onboardingTasks(request: GetAllOnboardingTasksRequestInput!): PagedResponseOfOnboardingTaskDto!
+    @cost(weight: "10")
+  getAllTodos(request: GetAllTodosRequestInput!): BaseResponsePaginationOfGetAllTodosResponse!
+    @cost(weight: "10")
+  getAllEmployees(request: GetAllEmployeesRequestInput!): BaseResponsePaginationOfGetAllEmployeesResponse!
+    @cost(weight: "10")
+  getAllAttendance(request: GetAllAttendanceRequestInput!): BaseResponsePaginationOfGetAllAttendanceResponse!
+    @cost(weight: "10")
+  getAllLeaves(request: GetAllLeavesRequestInput!): BaseResponsePaginationOfGetAllLeavesResponse!
+    @cost(weight: "10")
+}
+
+type Mutation {
+  ping: String!
+  createDocument(request: CreateDocumentRequestInput!): BaseResponseOfCreateDocumentResponse!
+    @cost(weight: "10")
+  updateDocument(request: UpdateDocumentRequestInput!): BaseResponseOfUpdateDocumentResponse!
+    @cost(weight: "10")
+  deleteDocument(request: DeleteDocumentRequestInput!): BaseResponseOfDeleteDocumentResponse!
+    @cost(weight: "10")
+  createPayroll(request: CreatePayrollRequestInput!): BaseResponseOfCreatePayrollResponse!
+    @cost(weight: "10")
+  updatePayroll(request: UpdatePayrollRequestInput!): BaseResponseOfUpdatePayrollResponse!
+    @cost(weight: "10")
+  deletePayroll(request: DeletePayrollRequestInput!): BaseResponseOfDeletePayrollResponse!
+    @cost(weight: "10")
+  createExpense(request: CreateExpenseRequestInput!): BaseResponseOfCreateExpenseResponse!
+    @cost(weight: "10")
+  updateExpense(request: UpdateExpenseRequestInput!): BaseResponseOfUpdateExpenseResponse!
+    @cost(weight: "10")
+  deleteExpense(request: DeleteExpenseRequestInput!): BaseResponseOfDeleteExpenseResponse!
+    @cost(weight: "10")
+  chat(request: ChatRequestInput!): CopilotMessageDto! @cost(weight: "10")
+  createTeamMember(request: CreateTeamMemberRequestInput!): BaseResponseOfCreateTeamMemberResponse!
+    @cost(weight: "10")
+  updateTeamMember(request: UpdateTeamMemberRequestInput!): BaseResponseOfUpdateTeamMemberResponse!
+    @cost(weight: "10")
+  deleteTeamMember(request: DeleteTeamMemberRequestInput!): BaseResponseOfDeleteTeamMemberResponse!
+    @cost(weight: "10")
+  createAnnouncement(request: CreateAnnouncementRequestInput!): AnnouncementDto!
+    @cost(weight: "10")
+  createGoal(request: CreateGoalRequestInput!): GoalDto! @cost(weight: "10")
+  createTrainingModule(request: CreateTrainingModuleRequestInput!): TrainingModuleDto!
+    @cost(weight: "10")
+  createRecognition(request: CreateRecognitionRequestInput!): RecognitionDto!
+    @cost(weight: "10")
+  createContribution(request: CreateContributionRequestInput!): ValueContributionDto!
+    @cost(weight: "10")
+  createJobPosting(request: CreateJobPostingRequestInput!): JobPostingDto!
+    @cost(weight: "10")
+  generateReport(request: GenerateReportRequestInput!): AnalyticsReportDto!
+    @cost(weight: "10")
+  createOnboardingTask(request: CreateOnboardingTaskRequestInput!): OnboardingTaskDto!
+    @cost(weight: "10")
+  createTodo(request: CreateTodoRequestInput!): BaseResponseOfCreateTodoResponse!
+    @cost(weight: "10")
+  updateTodo(request: UpdateTodoRequestInput!): BaseResponseOfUpdateTodoResponse!
+    @cost(weight: "10")
+  deleteTodo(request: DeleteTodoRequestInput!): BaseResponseOfDeleteTodoResponse!
+    @cost(weight: "10")
+  createEmployee(request: CreateEmployeeRequestInput!): BaseResponseOfCreateEmployeeResponse!
+    @cost(weight: "10")
+  updateEmployee(request: UpdateEmployeeRequestInput!): BaseResponseOfUpdateEmployeeResponse!
+    @cost(weight: "10")
+  deleteEmployee(request: DeleteEmployeeRequestInput!): BaseResponseOfDeleteEmployeeResponse!
+    @cost(weight: "10")
+  createAttendance(request: CreateAttendanceRequestInput!): BaseResponseOfCreateAttendanceResponse!
+    @cost(weight: "10")
+  updateAttendance(request: UpdateAttendanceRequestInput!): BaseResponseOfUpdateAttendanceResponse!
+    @cost(weight: "10")
+  deleteAttendance(request: DeleteAttendanceRequestInput!): BaseResponseOfDeleteAttendanceResponse!
+    @cost(weight: "10")
+  createLeave(request: CreateLeaveRequestInput!): BaseResponseOfCreateLeaveResponse!
+    @cost(weight: "10")
+  updateLeave(request: UpdateLeaveRequestInput!): BaseResponseOfUpdateLeaveResponse!
+    @cost(weight: "10")
+  deleteLeave(request: DeleteLeaveRequestInput!): BaseResponseOfDeleteLeaveResponse!
+    @cost(weight: "10")
+}
+
+type AnalyticsReportDto {
+  id: String
+  title: String
+  category: String
+  dataJson: String
+  generatedDate: DateTime!
+}
+
+type AnnouncementDto {
+  id: String
+  title: String
+  content: String
+  category: String
+  priority: String
+  scope: String
+  targetId: String
+  postedDate: DateTime!
+  expiryDate: DateTime
+  isActive: Boolean!
+  views: Int!
+  likes: Int!
+  createdOn: DateTime
+  createdByUserName: String
+}
+
+type BaseResponseOfCreateAttendanceResponse {
+  data: CreateAttendanceResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponseOfCreateDocumentResponse {
+  data: CreateDocumentResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponseOfCreateEmployeeResponse {
+  data: CreateEmployeeResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponseOfCreateExpenseResponse {
+  data: CreateExpenseResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponseOfCreateLeaveResponse {
+  data: CreateLeaveResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponseOfCreatePayrollResponse {
+  data: CreatePayrollResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponseOfCreateTeamMemberResponse {
+  data: CreateTeamMemberResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponseOfCreateTodoResponse {
+  data: CreateTodoResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponseOfDeleteAttendanceResponse {
+  data: DeleteAttendanceResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponseOfDeleteDocumentResponse {
+  data: DeleteDocumentResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponseOfDeleteEmployeeResponse {
+  data: DeleteEmployeeResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponseOfDeleteExpenseResponse {
+  data: DeleteExpenseResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponseOfDeleteLeaveResponse {
+  data: DeleteLeaveResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponseOfDeletePayrollResponse {
+  data: DeletePayrollResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponseOfDeleteTeamMemberResponse {
+  data: DeleteTeamMemberResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponseOfDeleteTodoResponse {
+  data: DeleteTodoResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponseOfUpdateAttendanceResponse {
+  data: UpdateAttendanceResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponseOfUpdateDocumentResponse {
+  data: UpdateDocumentResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponseOfUpdateEmployeeResponse {
+  data: UpdateEmployeeResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponseOfUpdateExpenseResponse {
+  data: UpdateExpenseResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponseOfUpdateLeaveResponse {
+  data: UpdateLeaveResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponseOfUpdatePayrollResponse {
+  data: UpdatePayrollResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponseOfUpdateTeamMemberResponse {
+  data: UpdateTeamMemberResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponseOfUpdateTodoResponse {
+  data: UpdateTodoResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponsePaginationOfGetAllAttendanceResponse {
+  meta: Meta
+  data: GetAllAttendanceResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponsePaginationOfGetAllDocumentsResponse {
+  meta: Meta
+  data: GetAllDocumentsResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponsePaginationOfGetAllEmployeesResponse {
+  meta: Meta
+  data: GetAllEmployeesResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponsePaginationOfGetAllExpensesResponse {
+  meta: Meta
+  data: GetAllExpensesResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponsePaginationOfGetAllLeavesResponse {
+  meta: Meta
+  data: GetAllLeavesResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponsePaginationOfGetAllPayrollsResponse {
+  meta: Meta
+  data: GetAllPayrollsResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponsePaginationOfGetAllTeamMembersResponse {
+  meta: Meta
+  data: GetAllTeamMembersResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type BaseResponsePaginationOfGetAllTodosResponse {
+  meta: Meta
+  data: GetAllTodosResponse
+  message: String
+  statusCode: Int!
+  success: Boolean!
+}
+
+type CopilotMessageDto {
+  id: String
+  role: String
+  content: String
+}
+
+type CreateAttendanceResponse {
+  attendanceId: String
+}
+
+type CreateDocumentResponse {
+  documentId: String
+}
+
+type CreateEmployeeResponse {
+  employeeId: String
+}
+
+type CreateExpenseResponse {
+  expenseId: String
+}
+
+type CreateLeaveResponse {
+  leaveId: String
+}
+
+type CreatePayrollResponse {
+  payrollId: String
+}
+
+type CreateTeamMemberResponse {
+  memberId: String
+}
+
+type CreateTodoResponse {
+  todoId: String
+}
+
+type DeleteAttendanceResponse {
+  attendanceId: String
+}
+
+type DeleteDocumentResponse {
+  documentId: String
+}
+
+type DeleteEmployeeResponse {
+  employeeId: String
+}
+
+type DeleteExpenseResponse {
+  expenseId: String
+}
+
+type DeleteLeaveResponse {
+  leaveId: String
+}
+
+type DeletePayrollResponse {
+  payrollId: String
+}
+
+type DeleteTeamMemberResponse {
+  memberId: String
+}
+
+type DeleteTodoResponse {
+  todoId: String
+}
+
+type DocumentDto {
+  documentId: String
+  category: String
+  fileName: String
+  fileUrl: String
+  expiryDate: DateTime
+  status: String
+  rejectionReason: String
+  userId: String
+  keyword: String
+}
+
+type ExpenseDto {
+  expenseId: String
+  userId: String
+  expenseDate: DateTime!
+  category: String
+  amount: Decimal!
+  currency: String
+  description: String
+  receiptUrl: String
+  status: String
+  approvedByUserId: String
+  rejectionReason: String
+  keyword: String
+}
+
+type GetAllAttendanceItem {
+  id: String
+  employeeId: String
+  date: DateTime!
+  clockInTime: DateTime
+  clockOutTime: DateTime
+  status: String
+  totalHours: Float
+  overtimeHours: Float
+  userContext: UserBase
+}
+
+type GetAllAttendanceResponse {
+  attendanceRecords: [GetAllAttendanceItem!]
+}
+
+type GetAllDocumentsResponse {
+  documents: [DocumentDto!]
+}
+
+type GetAllEmployeesItem {
+  id: String
+  firstName: String
+  lastName: String
+  email: String
+  phone: String
+  designation: String
+  department: String
+  dateOfJoining: DateTime
+  role: String
+  status: String
+  country: String
+  userContext: UserBase
+}
+
+type GetAllEmployeesResponse {
+  employees: [GetAllEmployeesItem!]
+}
+
+type GetAllExpensesResponse {
+  expenses: [ExpenseDto!]
+}
+
+type GetAllLeavesItem {
+  id: String
+  employeeId: String
+  leaveType: String
+  startDate: DateTime!
+  endDate: DateTime!
+  totalDays: Float!
+  status: String
+  reason: String
+  userContext: UserBase
+}
+
+type GetAllLeavesResponse {
+  leaves: [GetAllLeavesItem!]
+}
+
+type GetAllPayrollsResponse {
+  payrolls: [PayrollDto!]
+}
+
+type GetAllTeamMembersResponse {
+  teamMembers: [TeamMemberDto!]
+}
+
+type GetAllTodosItem {
+  description: String
+  dueDate: DateTime
+  isCompleted: Boolean!
+  title: String
+  todoId: String
+  userContext: UserBaseItem
+  userId: String
+}
+
+type GetAllTodosResponse {
+  todos: [GetAllTodosItem!]
+}
+
+type GoalDto {
+  id: String
+  userId: String
+  title: String
+  description: String
+  category: String
+  weight: Decimal!
+  targetValue: Decimal!
+  currentValue: Decimal!
+  status: String
+  startDate: DateTime!
+  endDate: DateTime!
+}
+
+type JobPostingDto {
+  id: String
+  title: String
+  description: String
+  department: String
+  location: String
+  status: String
+}
+
+type Meta {
+  continuationToken: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  pageNumber: Int!
+  skip: Int!
+  take: Int!
+  totalCount: Long!
+  totalPages: Int!
+  urlEncodedContinuationToken: String!
+}
+
+type OnboardingTaskDto {
+  id: String
+  userId: String
+  phase: String
+  title: String
+  isCompleted: Boolean!
+}
+
+type PagedResponseOfAnalyticsReportDto {
+  items: [AnalyticsReportDto!]!
+  totalCount: Int!
+  pageNumber: Int!
+  pageSize: Int!
+}
+
+type PagedResponseOfAnnouncementDto {
+  items: [AnnouncementDto!]!
+  totalCount: Int!
+  pageNumber: Int!
+  pageSize: Int!
+}
+
+type PagedResponseOfGoalDto {
+  items: [GoalDto!]!
+  totalCount: Int!
+  pageNumber: Int!
+  pageSize: Int!
+}
+
+type PagedResponseOfJobPostingDto {
+  items: [JobPostingDto!]!
+  totalCount: Int!
+  pageNumber: Int!
+  pageSize: Int!
+}
+
+type PagedResponseOfOnboardingTaskDto {
+  items: [OnboardingTaskDto!]!
+  totalCount: Int!
+  pageNumber: Int!
+  pageSize: Int!
+}
+
+type PagedResponseOfRecognitionDto {
+  items: [RecognitionDto!]!
+  totalCount: Int!
+  pageNumber: Int!
+  pageSize: Int!
+}
+
+type PagedResponseOfTrainingModuleDto {
+  items: [TrainingModuleDto!]!
+  totalCount: Int!
+  pageNumber: Int!
+  pageSize: Int!
+}
+
+type PagedResponseOfValueContributionDto {
+  items: [ValueContributionDto!]!
+  totalCount: Int!
+  pageNumber: Int!
+  pageSize: Int!
+}
+
+type PayrollDto {
+  payrollId: String
+  userId: String
+  payPeriodStart: DateTime!
+  payPeriodEnd: DateTime!
+  grossPay: Decimal!
+  totalDeductions: Decimal!
+  netPay: Decimal!
+  currency: String
+  countryCode: String
+  status: String
+  payslipUrl: String
+  basicSalary: Decimal!
+  hra: Decimal!
+  specialAllowance: Decimal!
+  bonus: Decimal!
+  overtimePay: Decimal!
+  reimbursements: Decimal!
+  pf: Decimal!
+  incomeTax: Decimal!
+  professionalTax: Decimal!
+  esi: Decimal!
+  healthInsurance: Decimal!
+  lwf: Decimal!
+  otherDeductions: Decimal!
+  employerPF: Decimal!
+  employerESI: Decimal!
+  gratuity: Decimal!
+  keyword: String
+}
+
+type RecognitionDto {
+  id: String
+  giverId: String
+  receiverId: String
+  message: String
+  category: String
+  createdOn: DateTime!
+}
+
+type TeamMemberDto {
+  memberId: String
+  userId: String
+  firstName: String
+  lastName: String
+  email: String
+  designation: String
+  department: String
+  dateOfJoining: DateTime!
+  status: String
+  phoneNumber: String
+  address: String
+  keyword: String
+}
+
+type TrainingModuleDto {
+  id: String
+  title: String
+  description: String
+  category: String
+  contentUrl: String
+  isMandatory: Boolean!
+}
+
+type UpdateAttendanceResponse {
+  attendanceId: String
+}
+
+type UpdateDocumentResponse {
+  documentId: String
+}
+
+type UpdateEmployeeResponse {
+  employeeId: String
+}
+
+type UpdateExpenseResponse {
+  expenseId: String
+}
+
+type UpdateLeaveResponse {
+  leaveId: String
+}
+
+type UpdatePayrollResponse {
+  payrollId: String
+}
+
+type UpdateTeamMemberResponse {
+  memberId: String
+}
+
+type UpdateTodoResponse {
+  todoId: String
+}
+
+type UserBase {
+  createdByUserId: String
+  createdByUserName: String
+  createdOn: DateTime
+  modifiedByUserId: String
+  modifiedByUserName: String
+  modifiedOn: DateTime
+  profilePicture: String
+}
+
+type UserBaseItem {
+  customProfilePicture: String
+  customUserName: String
+  createdByUserId: String
+  createdByUserName: String
+  createdOn: DateTime
+  modifiedByUserId: String
+  modifiedByUserName: String
+  modifiedOn: DateTime
+  profilePicture: String
+}
+
+type ValueContributionDto {
+  id: String
+  userId: String
+  title: String
+  description: String
+  category: String
+  points: Int!
+  status: String
+}
+
+input AnnouncementFilterInput {
+  category: String
+  priority: String
+  scope: String
+  isActive: Boolean
+  keyword: String
+}
+
+input ChatRequestInput {
+  conversationId: String
+  message: String
+}
+
+input CreateAnnouncementRequestInput {
+  title: String
+  content: String
+  category: String
+  priority: String
+  scope: String
+  targetId: String
+  expiryDate: DateTime
+}
+
+input CreateAttendanceDtoInput {
+  employeeId: String
+  date: DateTime!
+  clockInTime: DateTime
+  clockOutTime: DateTime
+  clockInLatitude: Float
+  clockInLongitude: Float
+  clockOutLatitude: Float
+  clockOutLongitude: Float
+  clockInIP: String
+  clockOutIP: String
+  clockInSelfieUrl: String
+  status: String
+}
+
+input CreateAttendanceRequestInput {
+  requestParam: CreateAttendanceDtoInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input CreateContributionRequestInput {
+  title: String
+  description: String
+  category: String
+}
+
+input CreateDocumentRequestInput {
+  requestParam: DocumentDtoInput
+}
+
+input CreateEmployeeDtoInput {
+  firstName: String
+  lastName: String
+  email: String
+  phone: String
+  designation: String
+  department: String
+  dateOfJoining: DateTime
+  managerId: String
+  reportingManagerId: String
+  role: String
+  status: String
+  country: String
+  onboardingStatus: String
+}
+
+input CreateEmployeeRequestInput {
+  requestParam: CreateEmployeeDtoInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input CreateExpenseRequestInput {
+  requestParam: ExpenseDtoInput
+}
+
+input CreateGoalRequestInput {
+  userId: String
+  title: String
+  description: String
+  category: String
+  weight: Decimal!
+  targetValue: Decimal!
+  startDate: DateTime!
+  endDate: DateTime!
+}
+
+input CreateJobPostingRequestInput {
+  title: String
+  description: String
+  department: String
+  location: String
+}
+
+input CreateLeaveDtoInput {
+  employeeId: String
+  leaveType: String
+  startDate: DateTime!
+  endDate: DateTime!
+  totalDays: Float!
+  reason: String
+  status: String
+  attachmentUrl: String
+}
+
+input CreateLeaveRequestInput {
+  requestParam: CreateLeaveDtoInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input CreateOnboardingTaskRequestInput {
+  userId: String
+  phase: String
+  title: String
+}
+
+input CreatePayrollRequestInput {
+  requestParam: PayrollDtoInput
+}
+
+input CreateRecognitionRequestInput {
+  receiverId: String
+  message: String
+  category: String
+}
+
+input CreateTeamMemberRequestInput {
+  requestParam: TeamMemberDtoInput
+}
+
+input CreateTodoDtoInput {
+  description: String
+  dueDate: DateTime
+  isCompleted: Boolean!
+  title: String
+  userId: String
+}
+
+input CreateTodoRequestInput {
+  requestParam: CreateTodoDtoInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input CreateTrainingModuleRequestInput {
+  title: String
+  description: String
+  category: String
+  contentUrl: String
+  isMandatory: Boolean!
+}
+
+input DeleteAttendanceDtoInput {
+  attendanceId: String
+}
+
+input DeleteAttendanceRequestInput {
+  requestParam: DeleteAttendanceDtoInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input DeleteDocumentRequestInput {
+  requestParam: DocumentDtoInput
+}
+
+input DeleteEmployeeDtoInput {
+  employeeId: String
+}
+
+input DeleteEmployeeRequestInput {
+  requestParam: DeleteEmployeeDtoInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input DeleteExpenseRequestInput {
+  requestParam: ExpenseDtoInput
+}
+
+input DeleteLeaveDtoInput {
+  leaveId: String
+}
+
+input DeleteLeaveRequestInput {
+  requestParam: DeleteLeaveDtoInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input DeletePayrollRequestInput {
+  requestParam: PayrollDtoInput
+}
+
+input DeleteTeamMemberRequestInput {
+  requestParam: TeamMemberDtoInput
+}
+
+input DeleteTodoDtoInput {
+  todoId: String
+}
+
+input DeleteTodoRequestInput {
+  requestParam: DeleteTodoDtoInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input DocumentDtoInput {
+  documentId: String
+  category: String
+  fileName: String
+  fileUrl: String
+  expiryDate: DateTime
+  status: String
+  rejectionReason: String
+  userId: String
+  keyword: String
+}
+
+input ExecutionContextInput {
+  sessionId: String
+  trackingId: String
+  uri: URI
+  userId: String
+}
+
+input ExpenseDtoInput {
+  expenseId: String
+  userId: String
+  expenseDate: DateTime!
+  category: String
+  amount: Decimal!
+  currency: String
+  description: String
+  receiptUrl: String
+  status: String
+  approvedByUserId: String
+  rejectionReason: String
+  keyword: String
+}
+
+input GenerateReportRequestInput {
+  title: String
+  category: String
+}
+
+input GetAllAnnouncementsRequestInput {
+  requestParam: AnnouncementFilterInput
+  orderByCriteria: OrderByCriteriaInput
+  pageCriteria: PageCriteriaInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input GetAllAttendanceDtoInput {
+  attendanceId: String
+  employeeId: String
+  startDate: DateTime
+  endDate: DateTime
+  status: String
+}
+
+input GetAllAttendanceRequestInput {
+  requestParam: GetAllAttendanceDtoInput
+  orderByCriteria: OrderByCriteriaInput
+  pageCriteria: PageCriteriaInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input GetAllContributionsRequestInput {
+  orderByCriteria: OrderByCriteriaInput
+  pageCriteria: PageCriteriaInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input GetAllDocumentsRequestInput {
+  requestParam: DocumentDtoInput
+  orderByCriteria: OrderByCriteriaInput
+  pageCriteria: PageCriteriaInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input GetAllEmployeesDtoInput {
+  employeeId: String
+  role: String
+  department: String
+  keyword: String
+}
+
+input GetAllEmployeesRequestInput {
+  requestParam: GetAllEmployeesDtoInput
+  orderByCriteria: OrderByCriteriaInput
+  pageCriteria: PageCriteriaInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input GetAllExpensesRequestInput {
+  requestParam: ExpenseDtoInput
+  orderByCriteria: OrderByCriteriaInput
+  pageCriteria: PageCriteriaInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input GetAllGoalsRequestInput {
+  userId: String
+  status: String
+  orderByCriteria: OrderByCriteriaInput
+  pageCriteria: PageCriteriaInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input GetAllJobPostingsRequestInput {
+  orderByCriteria: OrderByCriteriaInput
+  pageCriteria: PageCriteriaInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input GetAllLeavesDtoInput {
+  leaveId: String
+  employeeId: String
+  status: String
+  leaveType: String
+}
+
+input GetAllLeavesRequestInput {
+  requestParam: GetAllLeavesDtoInput
+  orderByCriteria: OrderByCriteriaInput
+  pageCriteria: PageCriteriaInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input GetAllOnboardingTasksRequestInput {
+  orderByCriteria: OrderByCriteriaInput
+  pageCriteria: PageCriteriaInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input GetAllPayrollsRequestInput {
+  requestParam: PayrollDtoInput
+  orderByCriteria: OrderByCriteriaInput
+  pageCriteria: PageCriteriaInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input GetAllRecognitionsRequestInput {
+  orderByCriteria: OrderByCriteriaInput
+  pageCriteria: PageCriteriaInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input GetAllReportsRequestInput {
+  orderByCriteria: OrderByCriteriaInput
+  pageCriteria: PageCriteriaInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input GetAllTeamMembersRequestInput {
+  requestParam: TeamMemberDtoInput
+  orderByCriteria: OrderByCriteriaInput
+  pageCriteria: PageCriteriaInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input GetAllTodosDtoInput {
+  isCompleted: Boolean
+  keyword: String
+  todoId: String
+  userId: String
+}
+
+input GetAllTodosRequestInput {
+  requestParam: GetAllTodosDtoInput
+  orderByCriteria: OrderByCriteriaInput
+  pageCriteria: PageCriteriaInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input GetAllTrainingModulesRequestInput {
+  orderByCriteria: OrderByCriteriaInput
+  pageCriteria: PageCriteriaInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input OrderByCriteriaInput {
+  order: String
+  orderBy: String
+}
+
+input PageCriteriaInput {
+  enablePage: Boolean!
+  pageSize: Int!
+  skip: Int!
+}
+
+input PayrollDtoInput {
+  payrollId: String
+  userId: String
+  payPeriodStart: DateTime!
+  payPeriodEnd: DateTime!
+  grossPay: Decimal!
+  totalDeductions: Decimal!
+  netPay: Decimal!
+  currency: String
+  countryCode: String
+  status: String
+  payslipUrl: String
+  basicSalary: Decimal!
+  hra: Decimal!
+  specialAllowance: Decimal!
+  bonus: Decimal!
+  overtimePay: Decimal!
+  reimbursements: Decimal!
+  pf: Decimal!
+  incomeTax: Decimal!
+  professionalTax: Decimal!
+  esi: Decimal!
+  healthInsurance: Decimal!
+  lwf: Decimal!
+  otherDeductions: Decimal!
+  employerPF: Decimal!
+  employerESI: Decimal!
+  gratuity: Decimal!
+  keyword: String
+}
+
+input TeamMemberDtoInput {
+  memberId: String
+  userId: String
+  firstName: String
+  lastName: String
+  email: String
+  designation: String
+  department: String
+  dateOfJoining: DateTime!
+  status: String
+  phoneNumber: String
+  address: String
+  keyword: String
+}
+
+input UpdateAttendanceDtoInput {
+  attendanceId: String
+  employeeId: String
+  date: DateTime!
+  clockInTime: DateTime
+  clockOutTime: DateTime
+  clockInLatitude: Float
+  clockInLongitude: Float
+  clockOutLatitude: Float
+  clockOutLongitude: Float
+  clockInIP: String
+  clockOutIP: String
+  clockInSelfieUrl: String
+  status: String
+}
+
+input UpdateAttendanceRequestInput {
+  requestParam: UpdateAttendanceDtoInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input UpdateDocumentRequestInput {
+  requestParam: DocumentDtoInput
+}
+
+input UpdateEmployeeDtoInput {
+  employeeId: String
+  firstName: String
+  lastName: String
+  email: String
+  phone: String
+  designation: String
+  department: String
+  dateOfJoining: DateTime
+  managerId: String
+  reportingManagerId: String
+  role: String
+  status: String
+  country: String
+  onboardingStatus: String
+}
+
+input UpdateEmployeeRequestInput {
+  requestParam: UpdateEmployeeDtoInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input UpdateExpenseRequestInput {
+  requestParam: ExpenseDtoInput
+}
+
+input UpdateLeaveDtoInput {
+  leaveId: String
+  employeeId: String
+  leaveType: String
+  startDate: DateTime!
+  endDate: DateTime!
+  totalDays: Float!
+  reason: String
+  status: String
+  attachmentUrl: String
+  rejectionReason: String
+}
+
+input UpdateLeaveRequestInput {
+  requestParam: UpdateLeaveDtoInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+input UpdatePayrollRequestInput {
+  requestParam: PayrollDtoInput
+}
+
+input UpdateTeamMemberRequestInput {
+  requestParam: TeamMemberDtoInput
+}
+
+input UpdateTodoDtoInput {
+  description: String
+  dueDate: DateTime
+  isCompleted: Boolean!
+  title: String
+  todoId: String
+  userId: String
+}
+
+input UpdateTodoRequestInput {
+  requestParam: UpdateTodoDtoInput
+  executionContext: ExecutionContextInput
+  requestSubType: String
+  requestType: String
+}
+
+"Defines when a policy shall be executed."
+enum ApplyPolicy {
+  "Before the resolver was executed."
+  BEFORE_RESOLVER
+  "After the resolver was executed."
+  AFTER_RESOLVER
+  "The policy is applied in the validation step before the execution."
+  VALIDATION
+}
+
+"The `DateTime` scalar type represents a date and time with time zone offset information."
+scalar DateTime
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/date-time.html")
+
+"The `Decimal` scalar type represents a decimal floating-point number with high precision."
+scalar Decimal
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/decimal.html")
+
+"The `Long` scalar type represents a signed 64-bit integer."
+scalar Long
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/long.html")
+
+"The `Upload` scalar type represents a file upload."
+scalar Upload
+
+"The `URI` scalar type represents a Uniform Resource Identifier (URI) as defined by RFC 3986."
+scalar URI @specifiedBy(url: "https://scalars.graphql.org/chillicream/uri.html")
+
+"The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
+directive @cost(
+  "The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc."
+  weight: String!
+) on
+  | SCALAR
+  | OBJECT
+  | FIELD_DEFINITION
+  | ARGUMENT_DEFINITION
+  | ENUM
+  | INPUT_FIELD_DEFINITION

@@ -1,0 +1,30 @@
+query GetAllAttendance($request: GetAllAttendanceRequestInput!) {
+  getAllAttendance(request: $request) {
+    data {
+      attendanceRecords {
+        id
+        employeeId
+        date
+        clockInTime
+        clockOutTime
+        status
+        totalHours
+        overtimeHours
+      }
+    }
+    message
+    statusCode
+    success
+  }
+}
+
+mutation CreateAttendance($request: CreateAttendanceRequestInput!) {
+  createAttendance(request: $request) {
+    data {
+      attendanceId
+    }
+    message
+    statusCode
+    success
+  }
+}
