@@ -4,6 +4,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTable, FilterConfig } from "../../components/table/DataTable";
 import { useMemo } from "react";
 import Link from "next/link";
+import { useQuery } from "@apollo/client/react";
+import { graphql } from "../../graphql/generated";
 
 type Document = {
   id: string;
@@ -20,7 +22,7 @@ const columns: ColumnDef<Document>[] = [
     accessorKey: "fileName",
     header: "Document Name",
     cell: ({ getValue }) => {
-      const name = getValue<string>();
+      const name = getValue<string>() || "Unnamed Document";
       return (
         <div className="flex items-center gap-2">
           <svg
@@ -46,7 +48,7 @@ const columns: ColumnDef<Document>[] = [
     header: "Category",
     cell: ({ getValue }) => {
       const category = getValue<Document["category"]>();
-      return <span className="capitalize">{category.replace("-", " ")}</span>;
+      return <span className="capitalize">{(category || "").replace("-", " ")}</span>;
     },
   },
   {
@@ -90,67 +92,82 @@ const columns: ColumnDef<Document>[] = [
         verified: "bg-green-100 text-green-800",
         rejected: "bg-red-100 text-red-800",
       };
+      const normalizedStatus = (status?.toLowerCase() || "missing") as Document["status"];
       return (
-        <span className={`rounded px-2 py-0.5 text-xs font-medium ${colors[status]}`}>
-          {status.charAt(0).toUpperCase() + status.slice(1)}
+        <span className={`rounded px-2 py-0.5 text-xs font-medium ${colors[normalizedStatus] || "bg-gray-100 text-gray-800"}`}>
+          {normalizedStatus.charAt(0).toUpperCase() + normalizedStatus.slice(1)}
         </span>
       );
     },
   },
 ];
 
-function generateMockData(): Document[] {
-  const data: Document[] = [];
-  const categories: Document["category"][] = [
-    "identity",
-    "employment",
-    "work-auth",
-    "tax",
-    "education",
-    "other",
-  ];
-  const statuses: Document["status"][] = [
-    "missing",
-    "uploaded",
-    "verified",
-    "rejected",
-  ];
-  const fileNames = [
-    "Passport.pdf",
-    "Aadhar Card.pdf",
-    "PAN Card.pdf",
-    "Employment Letter.pdf",
-    "Visa.pdf",
-    "Degree Certificate.pdf",
-    "Work Authorization.pdf",
-    "Tax Form.pdf",
-  ];
-
-  for (let i = 0; i < fileNames.length; i++) {
-    const uploadedDate = new Date();
-    uploadedDate.setDate(uploadedDate.getDate() - Math.floor(Math.random() * 30));
-    const expiryDate = new Date();
-    expiryDate.setFullYear(expiryDate.getFullYear() + Math.floor(Math.random() * 5));
-
-    data.push({
-      id: `doc-${i}`,
-      fileName: fileNames[i],
-      category: categories[i % categories.length],
-      status: statuses[i % statuses.length],
-      uploadedDate: uploadedDate.toISOString().split("T")[0],
-      expiryDate: expiryDate.toISOString().split("T")[0],
-      rejectionReason:
-        statuses[i % statuses.length] === "rejected"
-          ? "Document quality too low"
-          : "",
-    });
+const GET_ALL_DOCUMENTS = graphql(`
+  query GetAllDocuments($request: GetAllDocumentsRequestInput!) {
+    allDocuments(request: $request) {
+      data {
+        documents {
+          documentId
+          category
+          fileName
+          fileUrl
+          expiryDate
+          status
+          rejectionReason
+        }
+      }
+    }
   }
-
-  return data;
-}
+`);
 
 export default function DocumentsPage() {
-  const data = useMemo(() => generateMockData(), []);
+  const { data: queryData, loading } = useQuery(GET_ALL_DOCUMENTS, {
+    variables: {
+      request: {
+        pageCriteria: {
+          enablePage: true,
+          pageSize: 100,
+          skip: 0
+        }
+      }
+    }
+  });
+
+  const data = useMemo(() => {
+    if (!queryData?.allDocuments?.data?.documents) return [];
+    return queryData.allDocuments.data.documents.map((record: any) => ({
+      id: record.documentId || "",
+      fileName: record.fileName || "Document",
+      category: (record.category?.toLowerCase() || "other") as Document["category"],
+      status: (record.status?.toLowerCase() || "uploaded") as Document["status"],
+      uploadedDate: new Date().toISOString().split("T")[0], // Fallback since no uploadedDate in API yet
+      expiryDate: record.expiryDate ? new Date(record.expiryDate).toISOString().split("T")[0] : "",
+      rejectionReason: record.rejectionReason || "",
+    }));
+  }, [queryData]);
+
+  // Compute status overview metrics
+  const overview = useMemo(() => {
+    let verified = 0;
+    let uploaded = 0;
+    let pending = 0;
+    let rejected = 0;
+
+    data.forEach((doc) => {
+      const status = doc.status?.toLowerCase();
+      if (status === "verified") verified++;
+      else if (status === "uploaded") uploaded++;
+      else if (status === "rejected") rejected++;
+      else pending++;
+    });
+
+    return {
+      verified,
+      uploaded,
+      pending,
+      rejected,
+    };
+  }, [data]);
 
   const filters: FilterConfig = [
     { type: "search", placeholder: "Search documents..." },
@@ -209,10 +226,10 @@ export default function DocumentsPage() {
           </h2>
           <div className="grid gap-4 md:grid-cols-4">
             {[
-              { label: "Verified", count: 5, color: "bg-green-100 text-green-800" },
-              { label: "Uploaded", count: 2, color: "bg-yellow-100 text-yellow-800" },
-              { label: "Pending", count: 0, color: "bg-blue-100 text-blue-800" },
-              { label: "Rejected", count: 1, color: "bg-red-100 text-red-800" },
+              { label: "Verified", count: overview.verified, color: "bg-green-100 text-green-800" },
+              { label: "Uploaded", count: overview.uploaded, color: "bg-yellow-100 text-yellow-800" },
+              { label: "Pending", count: overview.pending, color: "bg-blue-100 text-blue-800" },
+              { label: "Rejected", count: overview.rejected, color: "bg-red-100 text-red-800" },
             ].map((item) => (
               <div
                 key={item.label}
@@ -228,15 +245,22 @@ export default function DocumentsPage() {
 
       {/* Main Content */}
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <DataTable<Document>
-          data={data}
-          columns={columns}
-          pageSizeOptions={[10, 20, 50]}
-          initialPageSize={10}
-          filters={filters}
-          className="rounded-md"
-        />
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <p className="text-slate-500">Loading documents...</p>
+          </div>
+        ) : (
+          <DataTable<Document>
+            data={data}
+            columns={columns}
+            pageSizeOptions={[10, 20, 50]}
+            initialPageSize={10}
+            filters={filters}
+            className="rounded-md"
+          />
+        )}
       </main>
     </div>
   );
 }
+

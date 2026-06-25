@@ -4,6 +4,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTable, FilterConfig } from "../../components/table/DataTable";
 import { useMemo } from "react";
 import Link from "next/link";
+import { useQuery } from "@apollo/client/react";
+import { graphql } from "../../graphql/generated";
 
 type Expense = {
   id: string;
@@ -20,7 +22,9 @@ const columns: ColumnDef<Expense>[] = [
     accessorKey: "date",
     header: "Date",
     cell: ({ getValue }) => {
-      const date = new Date(getValue<string>());
+      const dateVal = getValue<string>();
+      if (!dateVal) return <span className="text-slate-400">—</span>;
+      const date = new Date(dateVal);
       return <span className="tabular-nums">{date.toLocaleDateString()}</span>;
     },
   },
@@ -29,7 +33,7 @@ const columns: ColumnDef<Expense>[] = [
     header: "Category",
     cell: ({ getValue }) => {
       const category = getValue<Expense["category"]>();
-      return <span className="capitalize">{category.replace("-", " ")}</span>;
+      return <span className="capitalize">{(category || "").replace("-", " ")}</span>;
     },
   },
   {
@@ -37,7 +41,7 @@ const columns: ColumnDef<Expense>[] = [
     header: "Description",
     cell: ({ getValue }) => {
       const desc = getValue<string>();
-      return <span className="truncate">{desc}</span>;
+      return <span className="truncate">{desc || "—"}</span>;
     },
   },
   {
@@ -66,66 +70,88 @@ const columns: ColumnDef<Expense>[] = [
         paid: "bg-purple-100 text-purple-800",
       };
       return (
-        <span className={`rounded px-2 py-0.5 text-xs font-medium ${colors[status]}`}>
-          {status.charAt(0).toUpperCase() + status.slice(1).replace("-", " ")}
+        <span className={`rounded px-2 py-0.5 text-xs font-medium ${colors[status] || "bg-gray-100 text-gray-800"}`}>
+          {(status || "").charAt(0).toUpperCase() + (status || "").slice(1).replace("-", " ")}
         </span>
       );
     },
   },
 ];
 
-function generateMockData(): Expense[] {
-  const data: Expense[] = [];
-  const categories: Expense["category"][] = [
-    "travel",
-    "food",
-    "accommodation",
-    "communication",
-    "medical",
-    "office-supplies",
-    "other",
-  ];
-  const statuses: Expense["status"][] = [
-    "draft",
-    "submitted",
-    "pending-approval",
-    "approved",
-    "rejected",
-    "paid",
-  ];
-  const descriptions = [
-    "Flight to NYC",
-    "Hotel accommodation",
-    "Meal during conference",
-    "Mobile recharge",
-    "Medical checkup",
-    "Office supplies",
-    "Taxi fare",
-  ];
-
-  for (let i = 0; i < 20; i++) {
-    const date = new Date();
-    date.setDate(date.getDate() - Math.floor(Math.random() * 30));
-
-    data.push({
-      id: `expense-${i}`,
-      date: date.toISOString().split("T")[0],
-      category: categories[i % categories.length],
-      amount: 50 + Math.random() * 500,
-      description: descriptions[i % descriptions.length],
-      status: statuses[i % statuses.length],
-      approvedBy:
-        statuses[i % statuses.length] === "pending-approval"
-          ? "Pending"
-          : "Manager Name",
-    });
+const GET_ALL_EXPENSES = graphql(`
+  query GetAllExpenses($request: GetAllExpensesRequestInput!) {
+    allExpenses(request: $request) {
+      data {
+        expenses {
+          expenseId
+          expenseDate
+          category
+          amount
+          currency
+          description
+          status
+          approvedByUserId
+        }
+      }
+    }
   }
-
-  return data;
-}
+`);
 
 export default function ExpensesPage() {
-  const data = useMemo(() => generateMockData(), []);
+  const { data: queryData, loading } = useQuery(GET_ALL_EXPENSES, {
+    variables: {
+      request: {
+        pageCriteria: {
+          enablePage: true,
+          pageSize: 100,
+          skip: 0
+        }
+      }
+    }
+  });
+
+  const data = useMemo(() => {
+    if (!queryData?.allExpenses?.data?.expenses) return [];
+    return queryData.allExpenses.data.expenses.map((record: any) => ({
+      id: record.expenseId || "",
+      date: record.expenseDate ? new Date(record.expenseDate).toISOString().split("T")[0] : "",
+      category: (record.category?.toLowerCase() || "other") as Expense["category"],
+      amount: Number(record.amount || 0),
+      description: record.description || "",
+      status: (record.status?.toLowerCase() || "draft") as Expense["status"],
+      approvedBy: record.approvedByUserId || "Manager",
+    }));
+  }, [queryData]);
+
+  // Compute expense summary metrics
+  const summary = useMemo(() => {
+    let totalSubmitted = 0;
+    let pendingApproval = 0;
+    let approved = 0;
+    let rejected = 0;
+
+    data.forEach((exp) => {
+      if (exp.status === "submitted" || exp.status === "pending-approval") {
+        pendingApproval += exp.amount;
+        totalSubmitted += exp.amount;
+      } else if (exp.status === "approved" || exp.status === "paid") {
+        approved += exp.amount;
+        totalSubmitted += exp.amount;
+      } else if (exp.status === "rejected") {
+        rejected += exp.amount;
+        totalSubmitted += exp.amount;
+      } else {
+        totalSubmitted += exp.amount;
+      }
+    });
+
+    return {
+      submitted: `$${totalSubmitted.toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
+      pending: `$${pendingApproval.toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
+      approved: `$${approved.toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
+      rejected: `$${rejected.toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
+    };
+  }, [data]);
 
   const filters: FilterConfig = [
     { type: "search", placeholder: "Search expenses..." },
@@ -188,10 +214,10 @@ export default function ExpensesPage() {
           </h2>
           <div className="grid gap-4 md:grid-cols-4">
             {[
-              { label: "Total Submitted", amount: "$2,450", color: "bg-blue-100 text-blue-800" },
-              { label: "Pending Approval", amount: "$850", color: "bg-yellow-100 text-yellow-800" },
-              { label: "Approved", amount: "$1,200", color: "bg-green-100 text-green-800" },
-              { label: "Rejected", amount: "$400", color: "bg-red-100 text-red-800" },
+              { label: "Total Submitted", amount: summary.submitted, color: "bg-blue-100 text-blue-800" },
+              { label: "Pending Approval", amount: summary.pending, color: "bg-yellow-100 text-yellow-800" },
+              { label: "Approved", amount: summary.approved, color: "bg-green-100 text-green-800" },
+              { label: "Rejected", amount: summary.rejected, color: "bg-red-100 text-red-800" },
             ].map((item) => (
               <div
                 key={item.label}
@@ -207,15 +233,22 @@ export default function ExpensesPage() {
 
       {/* Main Content */}
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <DataTable<Expense>
-          data={data}
-          columns={columns}
-          pageSizeOptions={[10, 20, 50]}
-          initialPageSize={10}
-          filters={filters}
-          className="rounded-md"
-        />
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <p className="text-slate-500">Loading expenses...</p>
+          </div>
+        ) : (
+          <DataTable<Expense>
+            data={data}
+            columns={columns}
+            pageSizeOptions={[10, 20, 50]}
+            initialPageSize={10}
+            filters={filters}
+            className="rounded-md"
+          />
+        )}
       </main>
     </div>
   );
 }
+

@@ -4,6 +4,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTable, FilterConfig } from "../../components/table/DataTable";
 import { useMemo } from "react";
 import Link from "next/link";
+import { useQuery } from "@apollo/client/react";
+import { graphql } from "../../graphql/generated";
 
 type TeamMember = {
   id: string;
@@ -20,12 +22,15 @@ const columns: ColumnDef<TeamMember>[] = [
     accessorKey: "name",
     header: "Name",
     cell: ({ getValue }) => {
-      const name = getValue<string>();
+      const name = getValue<string>() || "";
+      const initials = name
+        ? name.split(" ").filter(Boolean).map((n) => n[0]).join("").slice(0, 2).toUpperCase()
+        : "??";
       return (
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-full bg-teal-100 flex items-center justify-center">
             <span className="text-xs font-bold text-teal-700">
-              {name.split(" ").map((n) => n[0]).join("")}
+              {initials}
             </span>
           </div>
           <span className="font-medium">{name}</span>
@@ -44,7 +49,7 @@ const columns: ColumnDef<TeamMember>[] = [
       const dept = getValue<string>();
       return (
         <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium dark:bg-slate-700">
-          {dept}
+          {dept || "—"}
         </span>
       );
     },
@@ -54,14 +59,16 @@ const columns: ColumnDef<TeamMember>[] = [
     header: "Email",
     cell: ({ getValue }) => {
       const email = getValue<string>();
-      return <span className="text-sm text-slate-600 dark:text-slate-400">{email}</span>;
+      return <span className="text-sm text-slate-600 dark:text-slate-400">{email || "—"}</span>;
     },
   },
   {
     accessorKey: "joinDate",
     header: "Join Date",
     cell: ({ getValue }) => {
-      const date = new Date(getValue<string>());
+      const dateVal = getValue<string>();
+      if (!dateVal) return <span className="text-slate-400">—</span>;
+      const date = new Date(dateVal);
       return <span className="tabular-nums">{date.toLocaleDateString()}</span>;
     },
   },
@@ -75,59 +82,81 @@ const columns: ColumnDef<TeamMember>[] = [
         inactive: "bg-gray-100 text-gray-800",
         "on-leave": "bg-yellow-100 text-yellow-800",
       };
+      const normalizedStatus = (status?.toLowerCase() || "active") as TeamMember["status"];
       return (
-        <span className={`rounded px-2 py-0.5 text-xs font-medium ${colors[status]}`}>
-          {status.charAt(0).toUpperCase() + status.slice(1).replace("-", " ")}
+        <span className={`rounded px-2 py-0.5 text-xs font-medium ${colors[normalizedStatus] || "bg-gray-100 text-gray-800"}`}>
+          {normalizedStatus.charAt(0).toUpperCase() + normalizedStatus.slice(1).replace("-", " ")}
         </span>
       );
     },
   },
 ];
 
-function generateMockData(): TeamMember[] {
-  const data: TeamMember[] = [];
-  const designations = [
-    "Software Engineer",
-    "Product Manager",
-    "Designer",
-    "Data Analyst",
-    "DevOps Engineer",
-    "QA Engineer",
-  ];
-  const departments = ["Engineering", "Product", "Design", "Analytics", "HR"];
-  const statuses: TeamMember["status"][] = ["active", "inactive", "on-leave"];
-
-  const names = [
-    "Alice Johnson",
-    "Bob Smith",
-    "Carol Davis",
-    "David Wilson",
-    "Eve Martinez",
-    "Frank Brown",
-    "Grace Lee",
-    "Henry Taylor",
-  ];
-
-  for (let i = 0; i < names.length; i++) {
-    const joinDate = new Date();
-    joinDate.setFullYear(joinDate.getFullYear() - Math.floor(Math.random() * 5));
-
-    data.push({
-      id: `team-${i}`,
-      name: names[i],
-      designation: designations[i % designations.length],
-      department: departments[i % departments.length],
-      email: `${names[i].toLowerCase().replace(" ", ".")}@company.com`,
-      status: statuses[i % statuses.length],
-      joinDate: joinDate.toISOString().split("T")[0],
-    });
+const GET_ALL_TEAM_MEMBERS = graphql(`
+  query GetAllTeamMembers($request: GetAllTeamMembersRequestInput!) {
+    allTeamMembers(request: $request) {
+      data {
+        teamMembers {
+          memberId
+          firstName
+          lastName
+          email
+          designation
+          department
+          dateOfJoining
+          status
+        }
+      }
+    }
   }
-
-  return data;
-}
+`);
 
 export default function TeamPage() {
-  const data = useMemo(() => generateMockData(), []);
+  const { data: queryData, loading } = useQuery(GET_ALL_TEAM_MEMBERS, {
+    variables: {
+      request: {
+        pageCriteria: {
+          enablePage: true,
+          pageSize: 100,
+          skip: 0
+        }
+      }
+    }
+  });
+
+  const data = useMemo(() => {
+    if (!queryData?.allTeamMembers?.data?.teamMembers) return [];
+    return queryData.allTeamMembers.data.teamMembers.map((record: any) => ({
+      id: record.memberId || "",
+      name: `${record.firstName || ""} ${record.lastName || ""}`.trim() || "Unknown Employee",
+      designation: record.designation || "Employee",
+      department: record.department || "General",
+      email: record.email || "",
+      status: (record.status?.toLowerCase() || "active") as TeamMember["status"],
+      joinDate: record.dateOfJoining ? new Date(record.dateOfJoining).toISOString().split("T")[0] : "",
+    }));
+  }, [queryData]);
+
+  // Compute team overview statistics
+  const overview = useMemo(() => {
+    let active = 0;
+    let onLeave = 0;
+    let inactive = 0;
+
+    data.forEach((member) => {
+      const normalizedStatus = member.status?.toLowerCase();
+      if (normalizedStatus === "active") active++;
+      else if (normalizedStatus === "on-leave" || normalizedStatus === "leave") onLeave++;
+      else inactive++;
+    });
+
+    return {
+      total: data.length,
+      active,
+      onLeave,
+      inactive,
+    };
+  }, [data]);
 
   const filters: FilterConfig = [
     { type: "search", placeholder: "Search team members..." },
@@ -184,10 +213,10 @@ export default function TeamPage() {
           </h2>
           <div className="grid gap-4 md:grid-cols-4">
             {[
-              { label: "Total Members", count: 8, color: "bg-blue-100 text-blue-800" },
-              { label: "Active", count: 6, color: "bg-green-100 text-green-800" },
-              { label: "On Leave", count: 1, color: "bg-yellow-100 text-yellow-800" },
-              { label: "Inactive", count: 1, color: "bg-gray-100 text-gray-800" },
+              { label: "Total Members", count: overview.total, color: "bg-blue-100 text-blue-800" },
+              { label: "Active", count: overview.active, color: "bg-green-100 text-green-800" },
+              { label: "On Leave", count: overview.onLeave, color: "bg-yellow-100 text-yellow-800" },
+              { label: "Inactive", count: overview.inactive, color: "bg-gray-100 text-gray-800" },
             ].map((item) => (
               <div
                 key={item.label}
@@ -203,15 +232,22 @@ export default function TeamPage() {
 
       {/* Main Content */}
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <DataTable<TeamMember>
-          data={data}
-          columns={columns}
-          pageSizeOptions={[10, 20, 50]}
-          initialPageSize={10}
-          filters={filters}
-          className="rounded-md"
-        />
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <p className="text-slate-500">Loading team members...</p>
+          </div>
+        ) : (
+          <DataTable<TeamMember>
+            data={data}
+            columns={columns}
+            pageSizeOptions={[10, 20, 50]}
+            initialPageSize={10}
+            filters={filters}
+            className="rounded-md"
+          />
+        )}
       </main>
     </div>
   );
 }
+

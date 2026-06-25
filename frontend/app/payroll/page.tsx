@@ -4,6 +4,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTable, FilterConfig } from "../../components/table/DataTable";
 import { useMemo } from "react";
 import Link from "next/link";
+import { useQuery } from "@apollo/client/react";
+import { graphql } from "../../graphql/generated";
 
 type PayrollRecord = {
   id: string;
@@ -84,48 +86,77 @@ const columns: ColumnDef<PayrollRecord>[] = [
         paid: "bg-purple-100 text-purple-800",
       };
       return (
-        <span className={`rounded px-2 py-0.5 text-xs font-medium ${colors[status]}`}>
-          {status.charAt(0).toUpperCase() + status.slice(1)}
+        <span className={`rounded px-2 py-0.5 text-xs font-medium ${colors[status] || "bg-gray-100 text-gray-800"}`}>
+          {(status || "").charAt(0).toUpperCase() + (status || "").slice(1)}
         </span>
       );
     },
   },
 ];
 
-function generateMockData(): PayrollRecord[] {
-  const data: PayrollRecord[] = [];
-  const statuses: PayrollRecord["status"][] = [
-    "draft",
-    "processing",
-    "approved",
-    "paid",
-  ];
-  const countries: PayrollRecord["country"][] = ["US", "IN"];
-
-  for (let i = 0; i < 12; i++) {
-    const date = new Date();
-    date.setMonth(date.getMonth() - i);
-    const monthYear = date.toLocaleString("en-US", {
-      month: "short",
-      year: "numeric",
-    });
-
-    data.push({
-      id: `payroll-${i}`,
-      payPeriod: monthYear,
-      grossPay: 50000 + Math.random() * 20000,
-      totalDeductions: 8000 + Math.random() * 5000,
-      netPay: 40000 + Math.random() * 15000,
-      status: statuses[i % statuses.length],
-      country: countries[i % countries.length],
-    });
+const GET_ALL_PAYROLLS = graphql(`
+  query GetAllPayrolls($request: GetAllPayrollsRequestInput!) {
+    allPayrolls(request: $request) {
+      data {
+        payrolls {
+          payrollId
+          payPeriodStart
+          payPeriodEnd
+          grossPay
+          totalDeductions
+          netPay
+          countryCode
+          status
+        }
+      }
+    }
   }
-
-  return data;
-}
+`);
 
 export default function PayrollPage() {
-  const data = useMemo(() => generateMockData(), []);
+  const { data: queryData, loading } = useQuery(GET_ALL_PAYROLLS, {
+    variables: {
+      request: {
+        pageCriteria: {
+          enablePage: true,
+          pageSize: 100,
+          skip: 0
+        }
+      }
+    }
+  });
+
+  const data = useMemo(() => {
+    if (!queryData?.allPayrolls?.data?.payrolls) return [];
+    return queryData.allPayrolls.data.payrolls.map((record: any) => {
+      const start = new Date(record.payPeriodStart);
+      const end = new Date(record.payPeriodEnd);
+      const payPeriod = `${start.toLocaleString("en-US", { month: "short", year: "numeric" })}`;
+      return {
+        id: record.payrollId || "",
+        payPeriod,
+        grossPay: Number(record.grossPay || 0),
+        totalDeductions: Number(record.totalDeductions || 0),
+        netPay: Number(record.netPay || 0),
+        status: (record.status?.toLowerCase() || "draft") as PayrollRecord["status"],
+        country: (record.countryCode || "US") as PayrollRecord["country"],
+      };
+    });
+  }, [queryData]);
+
+  // Compute summary values from fetched payrolls
+  const summary = useMemo(() => {
+    if (data.length === 0) {
+      return { gross: "$0.00", deductions: "$0.00", net: "$0.00", status: "N/A" };
+    }
+    const latest = data[0]; // Assuming latest is first
+    return {
+      gross: `$${latest.grossPay.toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
+      deductions: `$${latest.totalDeductions.toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
+      net: `$${latest.netPay.toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
+      status: latest.status.charAt(0).toUpperCase() + latest.status.slice(1),
+    };
+  }, [data]);
 
   const filters: FilterConfig = [
     { type: "search", placeholder: "Search payroll..." },
@@ -180,10 +211,10 @@ export default function PayrollPage() {
           </h2>
           <div className="grid gap-4 md:grid-cols-4">
             {[
-              { label: "Gross Pay", amount: "$50,000", color: "bg-blue-100 text-blue-800" },
-              { label: "Deductions", amount: "$8,500", color: "bg-red-100 text-red-800" },
-              { label: "Net Pay", amount: "$41,500", color: "bg-green-100 text-green-800" },
-              { label: "Status", amount: "Paid", color: "bg-purple-100 text-purple-800" },
+              { label: "Gross Pay", amount: summary.gross, color: "bg-blue-100 text-blue-800" },
+              { label: "Deductions", amount: summary.deductions, color: "bg-red-100 text-red-800" },
+              { label: "Net Pay", amount: summary.net, color: "bg-green-100 text-green-800" },
+              { label: "Status", amount: summary.status, color: "bg-purple-100 text-purple-800" },
             ].map((item) => (
               <div
                 key={item.label}
@@ -199,15 +230,22 @@ export default function PayrollPage() {
 
       {/* Main Content */}
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <DataTable<PayrollRecord>
-          data={data}
-          columns={columns}
-          pageSizeOptions={[10, 20, 50]}
-          initialPageSize={10}
-          filters={filters}
-          className="rounded-md"
-        />
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <p className="text-slate-500">Loading payroll records...</p>
+          </div>
+        ) : (
+          <DataTable<PayrollRecord>
+            data={data}
+            columns={columns}
+            pageSizeOptions={[10, 20, 50]}
+            initialPageSize={10}
+            filters={filters}
+            className="rounded-md"
+          />
+        )}
       </main>
     </div>
   );
 }
+
