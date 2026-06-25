@@ -20,6 +20,14 @@ using AnnouncementsFeature.Application.DTO;
 using RecruitmentFeature.Application.DTO;
 using AnalyticsFeature.Application.DTO;
 using OnboardingFeature.Application.DTO;
+using AttendanceFeature.Application.DTO;
+using LeaveFeature.Application.DTO;
+using UserFeature.Application.DTO;
+using PerformanceFeature.Application.DTO;
+using TrainingFeature.Application.DTO;
+using RecognitionFeature.Application.DTO;
+using ContributionsFeature.Application.DTO;
+using HRCopilotFeature.Application.DTO;
 
 namespace HRMS.API
 {
@@ -101,7 +109,15 @@ namespace HRMS.API
                 typeof(CreateAnnouncementHandler).Assembly,
                 typeof(CreateJobPostingHandler).Assembly,
                 typeof(GenerateReportHandler).Assembly,
-                typeof(CreateOnboardingTaskHandler).Assembly
+                typeof(CreateOnboardingTaskHandler).Assembly,
+                typeof(CreateAttendanceHandler).Assembly,
+                typeof(CreateLeaveHandler).Assembly,
+                typeof(CreateEmployeeHandler).Assembly,
+                typeof(CreateGoalHandler).Assembly,
+                typeof(CreateTrainingModuleHandler).Assembly,
+                typeof(CreateRecognitionHandler).Assembly,
+                typeof(CreateContributionHandler).Assembly,
+                typeof(ChatHandler).Assembly
             ]);
 
             services.AddInjectionPostgres(configuration);
