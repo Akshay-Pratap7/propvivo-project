@@ -3,8 +3,8 @@
 import { useSession } from "../../context/SessionContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo } from "react";
-import { useQuery } from "@apollo/client/react";
+import { useEffect, useMemo, useState } from "react";
+import { useQuery, useMutation } from "@apollo/client/react";
 import { graphql } from "../../graphql/generated";
 
 // Query definitions for Dashboard stats
@@ -67,6 +67,46 @@ const GET_DASHBOARD_STATS = graphql(`
   }
 `);
 
+const CREATE_ATTENDANCE = graphql(`
+  mutation CreateAttendance($request: CreateAttendanceRequestInput!) {
+    createAttendance(request: $request) {
+      data {
+        attendanceId
+      }
+    }
+  }
+`);
+
+const CREATE_LEAVE = graphql(`
+  mutation CreateLeave($request: CreateLeaveRequestInput!) {
+    createLeave(request: $request) {
+      data {
+        leaveId
+      }
+    }
+  }
+`);
+
+const CREATE_DOCUMENT = graphql(`
+  mutation CreateDocument($request: CreateDocumentRequestInput!) {
+    createDocument(request: $request) {
+      data {
+        documentId
+      }
+    }
+  }
+`);
+
+const CREATE_EXPENSE = graphql(`
+  mutation CreateExpense($request: CreateExpenseRequestInput!) {
+    createExpense(request: $request) {
+      data {
+        expenseId
+      }
+    }
+  }
+`);
+
 export default function DashboardPage() {
   const { user, isAuthenticated, isLoading } = useSession();
   const router = useRouter();
@@ -84,7 +124,7 @@ export default function DashboardPage() {
     skip: 0
   };
 
-  const { data: statsData, loading } = useQuery(GET_DASHBOARD_STATS, {
+  const { data: statsData, loading, refetch } = useQuery(GET_DASHBOARD_STATS, {
     skip: !isAuthenticated,
     variables: {
       attendanceReq: { pageCriteria: defaultPageCriteria },
@@ -96,6 +136,147 @@ export default function DashboardPage() {
       annReq: { pageCriteria: defaultPageCriteria }
     }
   });
+
+  // Modal state
+  const [activeModal, setActiveModal] = useState<'clock_in' | 'request_leave' | 'upload_doc' | 'submit_expense' | null>(null);
+
+  // Form states
+  const [attDate, setAttDate] = useState(new Date().toISOString().split('T')[0]);
+  const [clockIn, setClockIn] = useState('09:00');
+  const [clockOut, setClockOut] = useState('18:00');
+  const [attStatus, setAttStatus] = useState('Present');
+
+  const [leaveType, setLeaveType] = useState('Sick Leave');
+  const [leaveStart, setLeaveStart] = useState(new Date().toISOString().split('T')[0]);
+  const [leaveEnd, setLeaveEnd] = useState(new Date().toISOString().split('T')[0]);
+  const [leaveReason, setLeaveReason] = useState('');
+
+  const [docName, setDocName] = useState('');
+  const [docCategory, setDocCategory] = useState('ID Proof');
+  const [docExpiry, setDocExpiry] = useState('');
+
+  const [expCategory, setExpCategory] = useState('Travel');
+  const [expAmount, setExpAmount] = useState('');
+  const [expDescription, setExpDescription] = useState('');
+
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => setToast(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
+
+  const [createAttendance, { loading: attLoading }] = useMutation(CREATE_ATTENDANCE);
+  const [createLeave, { loading: leaveLoading }] = useMutation(CREATE_LEAVE);
+  const [createDocument, { loading: docLoading }] = useMutation(CREATE_DOCUMENT);
+  const [createExpense, { loading: expLoading }] = useMutation(CREATE_EXPENSE);
+
+  const handleClockInSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await createAttendance({
+        variables: {
+          request: {
+            requestParam: {
+              employeeId: user?.id || "",
+              date: new Date(attDate).toISOString(),
+              clockInTime: clockIn ? new Date(`${attDate}T${clockIn}:00.000Z`).toISOString() : null,
+              clockOutTime: clockOut ? new Date(`${attDate}T${clockOut}:00.000Z`).toISOString() : null,
+              status: attStatus
+            }
+          }
+        }
+      });
+      setToast({ message: "Attendance registered successfully!", type: "success" });
+      refetch();
+      setActiveModal(null);
+    } catch (err: any) {
+      setToast({ message: err.message || "Failed to save attendance.", type: "error" });
+    }
+  };
+
+  const handleLeaveSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const start = new Date(leaveStart);
+      const end = new Date(leaveEnd);
+      const totalDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+      
+      await createLeave({
+        variables: {
+          request: {
+            requestParam: {
+              employeeId: user?.id || "",
+              leaveType,
+              startDate: start.toISOString(),
+              endDate: end.toISOString(),
+              totalDays: Number(totalDays),
+              reason: leaveReason,
+              status: "Pending"
+            }
+          }
+        }
+      });
+      setToast({ message: "Leave requested successfully!", type: "success" });
+      refetch();
+      setActiveModal(null);
+    } catch (err: any) {
+      setToast({ message: err.message || "Failed to request leave.", type: "error" });
+    }
+  };
+
+  const handleDocumentSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await createDocument({
+        variables: {
+          request: {
+            requestParam: {
+              userId: user?.id || "",
+              fileName: docName,
+              category: docCategory,
+              expiryDate: docExpiry ? new Date(docExpiry).toISOString() : null,
+              status: "Verified",
+              fileUrl: `https://mockstorage.propvivo.com/docs/${docName}`
+            }
+          }
+        }
+      });
+      setToast({ message: "Document uploaded successfully!", type: "success" });
+      refetch();
+      setActiveModal(null);
+    } catch (err: any) {
+      setToast({ message: err.message || "Failed to upload document.", type: "error" });
+    }
+  };
+
+  const handleExpenseSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await createExpense({
+        variables: {
+          request: {
+            requestParam: {
+              userId: user?.id || "",
+              expenseDate: new Date().toISOString(),
+              category: expCategory,
+              amount: Number(expAmount),
+              currency: "USD",
+              description: expDescription,
+              status: "Pending"
+            }
+          }
+        }
+      });
+      setToast({ message: "Expense submitted successfully!", type: "success" });
+      refetch();
+      setActiveModal(null);
+    } catch (err: any) {
+      setToast({ message: err.message || "Failed to submit expense.", type: "error" });
+    }
+  };
 
   const stats = useMemo(() => {
     // 1. Attendance status
@@ -381,31 +562,272 @@ export default function DashboardPage() {
                 Quick Actions
               </h2>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <Link href="/attendance">
-                  <button className="w-full rounded-lg border-2 border-teal-200 bg-white px-4 py-3 text-center font-medium text-teal-600 transition-colors hover:bg-teal-50 dark:border-teal-700 dark:bg-slate-700 dark:text-teal-400 dark:hover:bg-slate-600 cursor-pointer">
-                    Clock In
-                  </button>
-                </Link>
-                <Link href="/leave">
-                  <button className="w-full rounded-lg border-2 border-orange-200 bg-white px-4 py-3 text-center font-medium text-orange-600 transition-colors hover:bg-orange-50 dark:border-orange-700 dark:bg-slate-700 dark:text-orange-400 dark:hover:bg-slate-600 cursor-pointer">
-                    Request Leave
-                  </button>
-                </Link>
-                <Link href="/documents">
-                  <button className="w-full rounded-lg border-2 border-blue-200 bg-white px-4 py-3 text-center font-medium text-blue-600 transition-colors hover:bg-blue-50 dark:border-blue-700 dark:bg-slate-700 dark:text-blue-400 dark:hover:bg-slate-600 cursor-pointer">
-                    Upload Document
-                  </button>
-                </Link>
-                <Link href="/payroll">
-                  <button className="w-full rounded-lg border-2 border-purple-200 bg-white px-4 py-3 text-center font-medium text-purple-600 transition-colors hover:bg-purple-50 dark:border-purple-700 dark:bg-slate-700 dark:text-purple-400 dark:hover:bg-slate-600 cursor-pointer">
-                    View Payslip
-                  </button>
-                </Link>
+                <button
+                  onClick={() => setActiveModal('clock_in')}
+                  className="w-full rounded-lg border-2 border-teal-200 bg-white px-4 py-3 text-center font-medium text-teal-600 transition-colors hover:bg-teal-50 dark:border-teal-700 dark:bg-slate-700 dark:text-teal-400 dark:hover:bg-slate-600 cursor-pointer"
+                >
+                  Clock In
+                </button>
+                <button
+                  onClick={() => setActiveModal('request_leave')}
+                  className="w-full rounded-lg border-2 border-orange-200 bg-white px-4 py-3 text-center font-medium text-orange-600 transition-colors hover:bg-orange-50 dark:border-orange-700 dark:bg-slate-700 dark:text-orange-400 dark:hover:bg-slate-600 cursor-pointer"
+                >
+                  Request Leave
+                </button>
+                <button
+                  onClick={() => setActiveModal('upload_doc')}
+                  className="w-full rounded-lg border-2 border-blue-200 bg-white px-4 py-3 text-center font-medium text-blue-600 transition-colors hover:bg-blue-50 dark:border-blue-700 dark:bg-slate-700 dark:text-blue-400 dark:hover:bg-slate-600 cursor-pointer"
+                >
+                  Upload Document
+                </button>
+                <button
+                  onClick={() => setActiveModal('submit_expense')}
+                  className="w-full rounded-lg border-2 border-purple-200 bg-white px-4 py-3 text-center font-medium text-purple-600 transition-colors hover:bg-purple-50 dark:border-purple-700 dark:bg-slate-700 dark:text-purple-400 dark:hover:bg-slate-600 cursor-pointer"
+                >
+                  Submit Expense
+                </button>
               </div>
             </div>
           </>
         )}
       </main>
+
+      {/* Toast Notification */}
+      {toast && (
+        <div className={`fixed right-4 top-4 z-50 rounded-lg p-4 shadow-lg text-white transition-all duration-300 ${toast.type === 'success' ? 'bg-teal-600' : 'bg-rose-600'}`}>
+          <div className="flex items-center space-x-2">
+            <span>{toast.message}</span>
+            <button onClick={() => setToast(null)} className="font-bold opacity-80 hover:opacity-100">&times;</button>
+          </div>
+        </div>
+      )}
+
+      {/* Modals */}
+      {activeModal && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-2xl dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                {activeModal === 'clock_in' && 'Clock In / Log Attendance'}
+                {activeModal === 'request_leave' && 'Request Leave'}
+                {activeModal === 'upload_doc' && 'Upload Document'}
+                {activeModal === 'submit_expense' && 'Submit Expense'}
+              </h3>
+              <button
+                onClick={() => setActiveModal(null)}
+                className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white text-xl font-bold"
+              >
+                &times;
+              </button>
+            </div>
+
+            {activeModal === 'clock_in' && (
+              <form onSubmit={handleClockInSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Date</label>
+                  <input
+                    type="date"
+                    value={attDate}
+                    onChange={(e) => setAttDate(e.target.value)}
+                    required
+                    className="mt-1 w-full rounded-md border border-slate-300 p-2 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Clock In Time</label>
+                    <input
+                      type="time"
+                      value={clockIn}
+                      onChange={(e) => setClockIn(e.target.value)}
+                      className="mt-1 w-full rounded-md border border-slate-300 p-2 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Clock Out Time</label>
+                    <input
+                      type="time"
+                      value={clockOut}
+                      onChange={(e) => setClockOut(e.target.value)}
+                      className="mt-1 w-full rounded-md border border-slate-300 p-2 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Status</label>
+                  <select
+                    value={attStatus}
+                    onChange={(e) => setAttStatus(e.target.value)}
+                    className="mt-1 w-full rounded-md border border-slate-300 p-2 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+                  >
+                    <option value="Present">Present</option>
+                    <option value="Late">Late</option>
+                    <option value="Half-Day">Half Day</option>
+                  </select>
+                </div>
+                <button
+                  type="submit"
+                  disabled={attLoading}
+                  className="w-full rounded-lg bg-teal-600 py-2 text-white font-medium hover:bg-teal-700 disabled:opacity-50"
+                >
+                  {attLoading ? 'Registering...' : 'Submit Attendance'}
+                </button>
+              </form>
+            )}
+
+            {activeModal === 'request_leave' && (
+              <form onSubmit={handleLeaveSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Leave Type</label>
+                  <select
+                    value={leaveType}
+                    onChange={(e) => setLeaveType(e.target.value)}
+                    className="mt-1 w-full rounded-md border border-slate-300 p-2 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+                  >
+                    <option value="Sick Leave">Sick Leave</option>
+                    <option value="Casual Leave">Casual Leave</option>
+                    <option value="Annual Leave">Annual Leave</option>
+                    <option value="Maternity/Paternity">Maternity/Paternity</option>
+                  </select>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Start Date</label>
+                    <input
+                      type="date"
+                      value={leaveStart}
+                      onChange={(e) => setLeaveStart(e.target.value)}
+                      required
+                      className="mt-1 w-full rounded-md border border-slate-300 p-2 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">End Date</label>
+                    <input
+                      type="date"
+                      value={leaveEnd}
+                      onChange={(e) => setLeaveEnd(e.target.value)}
+                      required
+                      className="mt-1 w-full rounded-md border border-slate-300 p-2 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Reason</label>
+                  <textarea
+                    value={leaveReason}
+                    onChange={(e) => setLeaveReason(e.target.value)}
+                    required
+                    rows={3}
+                    className="mt-1 w-full rounded-md border border-slate-300 p-2 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+                    placeholder="Provide a reason..."
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={leaveLoading}
+                  className="w-full rounded-lg bg-orange-600 py-2 text-white font-medium hover:bg-orange-700 disabled:opacity-50"
+                >
+                  {leaveLoading ? 'Requesting...' : 'Submit Request'}
+                </button>
+              </form>
+            )}
+
+            {activeModal === 'upload_doc' && (
+              <form onSubmit={handleDocumentSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">File Name</label>
+                  <input
+                    type="text"
+                    value={docName}
+                    onChange={(e) => setDocName(e.target.value)}
+                    required
+                    placeholder="e.g. Passport.pdf"
+                    className="mt-1 w-full rounded-md border border-slate-300 p-2 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Category</label>
+                  <select
+                    value={docCategory}
+                    onChange={(e) => setDocCategory(e.target.value)}
+                    className="mt-1 w-full rounded-md border border-slate-300 p-2 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+                  >
+                    <option value="ID Proof">ID Proof</option>
+                    <option value="Contract">Contract</option>
+                    <option value="Tax">Tax</option>
+                    <option value="Certificates">Certificates</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Expiry Date</label>
+                  <input
+                    type="date"
+                    value={docExpiry}
+                    onChange={(e) => setDocExpiry(e.target.value)}
+                    className="mt-1 w-full rounded-md border border-slate-300 p-2 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={docLoading}
+                  className="w-full rounded-lg bg-blue-600 py-2 text-white font-medium hover:bg-blue-700 disabled:opacity-50"
+                >
+                  {docLoading ? 'Uploading...' : 'Submit Document'}
+                </button>
+              </form>
+            )}
+
+            {activeModal === 'submit_expense' && (
+              <form onSubmit={handleExpenseSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Category</label>
+                  <select
+                    value={expCategory}
+                    onChange={(e) => setExpCategory(e.target.value)}
+                    className="mt-1 w-full rounded-md border border-slate-300 p-2 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+                  >
+                    <option value="Travel">Travel</option>
+                    <option value="Meals">Meals</option>
+                    <option value="Equipment">Equipment</option>
+                    <option value="Office Supplies">Office Supplies</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Amount ($)</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={expAmount}
+                    onChange={(e) => setExpAmount(e.target.value)}
+                    required
+                    placeholder="e.g. 50.00"
+                    className="mt-1 w-full rounded-md border border-slate-300 p-2 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Description</label>
+                  <textarea
+                    value={expDescription}
+                    onChange={(e) => setExpDescription(e.target.value)}
+                    required
+                    rows={3}
+                    placeholder="Provide a description..."
+                    className="mt-1 w-full rounded-md border border-slate-300 p-2 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={expLoading}
+                  className="w-full rounded-lg bg-orange-600 py-2 text-white font-medium hover:bg-orange-700 disabled:opacity-50"
+                >
+                  {expLoading ? 'Submitting...' : 'Submit Expense'}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
