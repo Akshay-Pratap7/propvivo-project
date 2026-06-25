@@ -27,7 +27,7 @@ function LoginForm() {
 		setLoading(true);
 		try {
 			await login({ email, password });
-			const next = searchParams.get("next") || "/";
+			const next = searchParams.get("next") || "/dashboard";
 			router.replace(next);
 		} catch (err: any) {
 			setError(err?.message || "Login failed");

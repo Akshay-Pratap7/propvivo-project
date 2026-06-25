@@ -68,14 +68,14 @@ const GET_DASHBOARD_STATS = graphql(`
 `);
 
 export default function DashboardPage() {
-  const { user, isAuthenticated } = useSession();
+  const { user, isAuthenticated, isLoading } = useSession();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push("/(auth)/login");
+    if (!isLoading && !isAuthenticated) {
+      router.replace("/login");
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, isLoading, router]);
 
   // Setup default variables for pagination inputs
   const defaultPageCriteria = {
