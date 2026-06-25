@@ -1,2 +1,5 @@
 **/bin/
 **/obj/
+frontend/.env.local
+frontend/.env*.local
+
