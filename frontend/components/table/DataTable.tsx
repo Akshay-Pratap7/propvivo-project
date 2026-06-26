@@ -183,7 +183,7 @@ export function DataTable<TData>({
 	return (
 		<div className={`relative ${className ?? ""}`}>
 			{/* Top bar with quick filters, search, and filter drawer button */}
-			<div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+			<div className="mb-4 flex flex-wrap items-center justify-between gap-3">
 				<div className="flex flex-wrap items-center gap-3">
 					{quickFiltersTopBar.map((qf, idx) => {
 						const value = filterState.selects[qf.columnId] ?? "__all__";
@@ -191,7 +191,7 @@ export function DataTable<TData>({
 						const selected = options.find((o) => o.value === value) ?? null;
 						return (
 							<div key={`qf-${qf.columnId}-${idx}`} className="flex items-center gap-2">
-								<label className="text-sm text-muted-foreground">{qf.label ?? qf.columnId}</label>
+								<label className="text-sm text-slate-500 font-medium">{qf.label ?? qf.columnId}</label>
 								<div className="min-w-[200px]">
 									<Select
 										options={options}
@@ -208,8 +208,8 @@ export function DataTable<TData>({
 											control: (base) => ({
 												...base,
 												minHeight: "36px",
-												borderColor: "rgb(var(--color-border) / 1)",
-												backgroundColor: "var(--background)",
+												borderColor: "#e2e8f0",
+												backgroundColor: "#ffffff",
 											}),
 											menu: (base) => ({
 												...base,
@@ -226,13 +226,13 @@ export function DataTable<TData>({
 					<input
 						type="text"
 						placeholder={filters.find((f) => f.type === "search")?.placeholder ?? "Search…"}
-						className="h-9 w-[260px] rounded border border-border bg-background px-3"
+						className="h-9 w-[260px] rounded border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none focus:border-[#FF5A5F] focus:ring-1 focus:ring-[#FF5A5F]"
 						value={filterState.search}
 						onChange={(e) => setFilterState((prev) => ({ ...prev, search: e.target.value }))}
 					/>
 					<button
 						type="button"
-						className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2"
+						className="inline-flex items-center gap-2 rounded border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
 						onClick={() => {
 							setDraftFilter(filterState);
 							setIsFilterOpen(true);
@@ -245,27 +245,27 @@ export function DataTable<TData>({
 				</div>
 			</div>
 
-			<div className="overflow-x-auto rounded border border-border">
+			<div className="overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm">
 				<table className="min-w-full text-sm">
-					<thead className="bg-muted/50">
+					<thead className="bg-slate-50">
 						{table.getHeaderGroups().map((headerGroup) => (
-							<tr key={headerGroup.id} className="border-b border-border">
+							<tr key={headerGroup.id} className="border-b border-slate-200">
 								{headerGroup.headers.map((header) => {
 									return (
 										<th
 											key={header.id}
-											className="px-3 py-2 text-left font-medium text-foreground select-none"
+											className="px-4 py-3 text-left font-semibold text-slate-700 select-none whitespace-nowrap"
 										>
 											{header.isPlaceholder ? null : (
 												<button
 													type="button"
 													onClick={header.column.getToggleSortingHandler()}
-													className="inline-flex items-center gap-1 hover:underline"
+													className="inline-flex items-center gap-1 hover:text-slate-900 transition-colors"
 												>
 													{flexRender(header.column.columnDef.header, header.getContext())}
 													{{
-														asc: "▲",
-														desc: "▼",
+														asc: " ▲",
+														desc: " ▼",
 													}[header.column.getIsSorted() as string] ?? null}
 												</button>
 											)}
@@ -275,12 +275,12 @@ export function DataTable<TData>({
 							</tr>
 						))}
 					</thead>
-					<tbody>
+					<tbody className="divide-y divide-slate-100 bg-white text-slate-900">
 						{table.getRowModel().rows.length ? (
 							table.getRowModel().rows.map((row) => (
-								<tr key={row.id} className="border-b border-border hover:bg-muted/30">
+								<tr key={row.id} className="hover:bg-slate-50/50 transition-colors">
 									{row.getVisibleCells().map((cell) => (
-										<td key={cell.id} className="px-3 py-2">
+										<td key={cell.id} className="px-4 py-3 align-middle text-slate-800">
 											{flexRender(cell.column.columnDef.cell, cell.getContext())}
 										</td>
 									))}
@@ -288,8 +288,8 @@ export function DataTable<TData>({
 							))
 						) : (
 							<tr>
-								<td colSpan={columns.length} className="px-3 py-6 text-center text-muted-foreground">
-									No results
+								<td colSpan={columns.length} className="px-4 py-8 text-center text-slate-500 font-medium">
+									No records found
 								</td>
 							</tr>
 						)}
@@ -297,16 +297,16 @@ export function DataTable<TData>({
 				</table>
 			</div>
 
-			<div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-				<div className="flex items-center gap-2">
+			<div className="mt-4 flex flex-wrap items-center justify-between gap-3 px-1">
+				<div className="flex items-center gap-3">
 					<select
-						className="rounded border border-border bg-background px-2 py-1"
+						className="rounded-md border border-slate-200 bg-white px-2 py-1.5 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#FF5A5F]/20"
 						value={pageSize}
 						onChange={(e) => setPageSize(Number(e.target.value))}
 					>
 						{pageSizeOptions.map((size) => (
 							<option key={size} value={size}>
-								{size} records
+								{size} per page
 							</option>
 						))}
 					</select>
@@ -364,11 +364,11 @@ function TableToolbar({
 				if (cfg.type === "search") {
 					return (
 						<div key={`search-${idx}`} className="flex flex-col gap-1">
-							<label className="text-xs text-muted-foreground">Search</label>
+							<label className="text-xs text-slate-500 font-medium">Search</label>
 							<input
 								type="text"
 								placeholder={cfg.placeholder ?? "Search…"}
-								className="h-9 w-[240px] rounded border border-border bg-background px-3"
+								className="h-9 w-[240px] rounded border border-slate-200 bg-white px-3 text-sm focus:border-[#FF5A5F] focus:ring-1 focus:ring-[#FF5A5F] outline-none"
 								value={filterState.search}
 								onChange={(e) => onChange({ ...filterState, search: e.target.value })}
 							/>
@@ -379,9 +379,9 @@ function TableToolbar({
 					const value = filterState.selects[cfg.columnId] ?? "__all__";
 					return (
 						<div key={`select-${cfg.columnId}`} className="flex flex-col gap-1">
-							<label className="text-xs text-muted-foreground">{cfg.label ?? cfg.columnId}</label>
+							<label className="text-xs text-slate-500 font-medium">{cfg.label ?? cfg.columnId}</label>
 							<select
-								className="h-9 min-w-[160px] rounded border border-border bg-background px-2"
+								className="h-9 min-w-[160px] rounded border border-slate-200 bg-white px-2 text-sm focus:border-[#FF5A5F] focus:ring-1 focus:ring-[#FF5A5F] outline-none"
 								value={value}
 								onChange={(e) =>
 									onChange({
@@ -404,11 +404,11 @@ function TableToolbar({
 					const range = filterState.dateRanges[cfg.columnId] ?? {};
 					return (
 						<div key={`date-${cfg.columnId}`} className="flex flex-col gap-1">
-							<label className="text-xs text-muted-foreground">{cfg.label ?? `${cfg.columnId} range`}</label>
+							<label className="text-xs text-slate-500 font-medium">{cfg.label ?? `${cfg.columnId} range`}</label>
 							<div className="flex items-center gap-2">
 								<input
 									type="date"
-									className="h-9 rounded border border-border bg-background px-2"
+									className="h-9 rounded border border-slate-200 bg-white px-2 text-sm focus:border-[#FF5A5F] outline-none"
 									value={range.from ?? ""}
 									onChange={(e) =>
 										onChange({
@@ -417,10 +417,10 @@ function TableToolbar({
 										})
 									}
 								/>
-								<span className="text-xs text-muted-foreground">to</span>
+								<span className="text-xs text-slate-400 font-medium">to</span>
 								<input
 									type="date"
-									className="h-9 rounded border border-border bg-background px-2"
+									className="h-9 rounded border border-slate-200 bg-white px-2 text-sm focus:border-[#FF5A5F] outline-none"
 									value={range.to ?? ""}
 									onChange={(e) =>
 										onChange({
@@ -437,12 +437,12 @@ function TableToolbar({
 					const range = filterState.numberRanges[cfg.columnId] ?? {};
 					return (
 						<div key={`num-${cfg.columnId}`} className="flex flex-col gap-1">
-							<label className="text-xs text-muted-foreground">{cfg.label ?? `${cfg.columnId} range`}</label>
+							<label className="text-xs text-slate-500 font-medium">{cfg.label ?? `${cfg.columnId} range`}</label>
 							<div className="flex items-center gap-2">
 								<input
 									type="number"
 									inputMode="numeric"
-									className="h-9 w-24 rounded border border-border bg-background px-2"
+									className="h-9 w-24 rounded border border-slate-200 bg-white px-2 text-sm outline-none focus:border-[#FF5A5F]"
 									placeholder="Min"
 									value={range.min ?? ""}
 									onChange={(e) =>
@@ -452,11 +452,11 @@ function TableToolbar({
 										})
 									}
 								/>
-								<span className="text-xs text-muted-foreground">to</span>
+								<span className="text-xs text-slate-400 font-medium">to</span>
 								<input
 									type="number"
 									inputMode="numeric"
-									className="h-9 w-24 rounded border border-border bg-background px-2"
+									className="h-9 w-24 rounded border border-slate-200 bg-white px-2 text-sm outline-none focus:border-[#FF5A5F]"
 									placeholder="Max"
 									value={range.max ?? ""}
 									onChange={(e) =>
@@ -488,32 +488,32 @@ function FilterDrawer(props: {
 	const { open, onClose, filters, filterState, onChange, onReset, onApply } = props;
 	return (
 		<Fragment>
-			{open ? <div className="fixed inset-0 z-40 bg-black/30" onClick={onClose} aria-hidden="true" /> : null}
+			{open ? <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" /> : null}
 			<div
-				className={`fixed right-0 top-0 z-50 h-full w-[340px] transform border-l border-border bg-background shadow-xl transition-transform ${
+				className={`fixed right-0 top-0 z-50 h-full w-[360px] transform border-l border-slate-200 bg-white shadow-2xl transition-transform duration-300 ease-in-out ${
 					open ? "translate-x-0" : "translate-x-full"
 				}`}
 				role="dialog"
 				aria-modal="true"
 			>
-				<div className="flex items-center justify-between border-b border-border p-4">
-					<h3 className="text-base font-medium">Filters</h3>
-					<button className="rounded border border-border px-2 py-1" onClick={onClose} aria-label="Close filters">
-						×
+				<div className="flex items-center justify-between border-b border-slate-100 p-5">
+					<h3 className="text-lg font-bold text-slate-900">Filters</h3>
+					<button className="rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors" onClick={onClose} aria-label="Close filters">
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
 					</button>
 				</div>
-				<div className="flex h-[calc(100%-112px)] flex-col gap-4 overflow-y-auto p-4">
+				<div className="flex h-[calc(100%-140px)] flex-col gap-6 overflow-y-auto p-5">
 					{filters.map((cfg, idx) => {
 						if (cfg.type === "search") return null;
 						return <FilterField key={`${cfg.type}-${idx}`} cfg={cfg} filterState={filterState} onChange={onChange} />;
 					})}
 				</div>
-				<div className="flex items-center justify-between border-t border-border p-4">
-					<button className="rounded border border-border px-3 py-2" onClick={onReset}>
-						Reset
+				<div className="absolute bottom-0 w-full flex items-center justify-between border-t border-slate-100 bg-slate-50/80 p-5 backdrop-blur-sm">
+					<button className="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-sm" onClick={onReset}>
+						Reset All
 					</button>
-					<button className="rounded bg-black px-3 py-2 text-white" onClick={onApply}>
-						Apply
+					<button className="rounded-lg bg-[#FF5A5F] px-6 py-2.5 text-sm font-medium text-white hover:bg-[#ff474d] transition-colors shadow-sm" onClick={onApply}>
+						Apply Filters
 					</button>
 				</div>
 			</div>
@@ -535,13 +535,13 @@ function FilterField({
 		const options = cfg.options.map((o) => ({ label: o.label, value: o.value }));
 		const selected = options.find((o) => o.value === value) ?? null;
 		return (
-			<div className="flex flex-col gap-1">
-				<label className="text-sm font-medium">{cfg.label ?? cfg.columnId}</label>
-				<div className="min-w-[200px]">
+			<div className="flex flex-col gap-2">
+				<label className="text-sm font-semibold text-slate-800">{cfg.label ?? cfg.columnId}</label>
+				<div className="w-full">
 					<Select
 						options={options}
 						value={selected}
-						placeholder="All"
+						placeholder="Select option..."
 						isClearable
 						onChange={(opt) =>
 							onChange({
@@ -552,9 +552,10 @@ function FilterField({
 						styles={{
 							control: (base) => ({
 								...base,
-								minHeight: "36px",
-								borderColor: "rgb(var(--color-border) / 1)",
-								backgroundColor: "var(--background)",
+								minHeight: "42px",
+								borderColor: "#e2e8f0",
+								backgroundColor: "#ffffff",
+								borderRadius: "0.5rem"
 							}),
 							menu: (base) => ({
 								...base,
@@ -569,27 +570,32 @@ function FilterField({
 	if (cfg.type === "checkboxGroup") {
 		const group = filterState.checkboxGroups[cfg.columnId] ?? {};
 		return (
-			<div className="flex flex-col gap-2">
-				<label className="text-sm font-medium">{cfg.label ?? cfg.columnId}</label>
-				<div className="space-y-2">
+			<div className="flex flex-col gap-3">
+				<label className="text-sm font-semibold text-slate-800">{cfg.label ?? cfg.columnId}</label>
+				<div className="space-y-3">
 					{cfg.options.map((opt) => {
 						const checked = Boolean(group[opt.value]);
 						return (
-							<label key={opt.value} className="flex items-center gap-2 text-sm">
-								<input
-									type="checkbox"
-									checked={checked}
-									onChange={(e) => {
-										onChange({
-											...filterState,
-											checkboxGroups: {
-												...filterState.checkboxGroups,
-												[cfg.columnId]: { ...group, [opt.value]: e.target.checked },
-											},
-										});
-									}}
-								/>
-								<span>{opt.label}</span>
+							<label key={opt.value} className="flex items-center gap-3 text-sm text-slate-700 cursor-pointer group">
+								<div className="relative flex items-center justify-center">
+									<input
+										type="checkbox"
+										className="peer sr-only"
+										checked={checked}
+										onChange={(e) => {
+											onChange({
+												...filterState,
+												checkboxGroups: {
+													...filterState.checkboxGroups,
+													[cfg.columnId]: { ...group, [opt.value]: e.target.checked },
+												},
+											});
+										}}
+									/>
+									<div className="h-5 w-5 rounded border border-slate-300 bg-white transition-all peer-checked:border-[#FF5A5F] peer-checked:bg-[#FF5A5F] group-hover:border-[#FF5A5F]/50"></div>
+									<svg className="absolute h-3.5 w-3.5 text-white opacity-0 transition-opacity peer-checked:opacity-100 pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+								</div>
+								<span className="font-medium">{opt.label}</span>
 							</label>
 						);
 					})}
@@ -600,9 +606,9 @@ function FilterField({
 	if (cfg.type === "dateRange") {
 		const range = filterState.dateRanges[cfg.columnId] ?? {};
 		return (
-			<div className="flex flex-col gap-2">
-				<label className="text-sm font-medium">{cfg.label ?? `${cfg.columnId} range`}</label>
-				<div className="flex items-center gap-2">
+			<div className="flex flex-col gap-3">
+				<label className="text-sm font-semibold text-slate-800">{cfg.label ?? `${cfg.columnId} Range`}</label>
+				<div className="flex items-center gap-3">
 					<DatePicker
 						selected={range.from ? new Date(range.from) : null}
 						onChange={(date) =>
@@ -614,12 +620,12 @@ function FilterField({
 								},
 							})
 						}
-						className="h-9 rounded border border-border bg-background px-2"
+						className="w-full h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm focus:border-[#FF5A5F] outline-none"
 						placeholderText="Start date"
-						dateFormat="yyyy-MM-dd"
+						dateFormat="MMM d, yyyy"
 						isClearable
 					/>
-					<span className="text-xs text-muted-foreground">to</span>
+					<span className="text-xs font-bold text-slate-400">TO</span>
 					<DatePicker
 						selected={range.to ? new Date(range.to) : null}
 						onChange={(date) =>
@@ -631,9 +637,9 @@ function FilterField({
 								},
 							})
 						}
-						className="h-9 rounded border border-border bg-background px-2"
+						className="w-full h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm focus:border-[#FF5A5F] outline-none"
 						placeholderText="End date"
-						dateFormat="yyyy-MM-dd"
+						dateFormat="MMM d, yyyy"
 						isClearable
 					/>
 				</div>
@@ -643,13 +649,13 @@ function FilterField({
 	if (cfg.type === "numberRange") {
 		const range = filterState.numberRanges[cfg.columnId] ?? {};
 		return (
-			<div className="flex flex-col gap-2">
-				<label className="text-sm font-medium">{cfg.label ?? `${cfg.columnId} range`}</label>
-				<div className="flex items-center gap-2">
+			<div className="flex flex-col gap-3">
+				<label className="text-sm font-semibold text-slate-800">{cfg.label ?? `${cfg.columnId} Range`}</label>
+				<div className="flex items-center gap-3">
 					<input
 						type="number"
 						inputMode="numeric"
-						className="h-9 w-28 rounded border border-border bg-background px-2"
+						className="w-full h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none focus:border-[#FF5A5F]"
 						placeholder="Min"
 						value={range.min ?? ""}
 						onChange={(e) =>
@@ -659,11 +665,11 @@ function FilterField({
 							})
 						}
 					/>
-					<span className="text-xs text-muted-foreground">to</span>
+					<span className="text-xs font-bold text-slate-400">TO</span>
 					<input
 						type="number"
 						inputMode="numeric"
-						className="h-9 w-28 rounded border border-border bg-background px-2"
+						className="w-full h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none focus:border-[#FF5A5F]"
 						placeholder="Max"
 						value={range.max ?? ""}
 						onChange={(e) =>
@@ -684,8 +690,8 @@ function PaginationSummary({ tableTotal, pageIndex, pageSize }: { tableTotal: nu
 	const start = tableTotal === 0 ? 0 : pageIndex * pageSize + 1;
 	const end = Math.min(tableTotal, (pageIndex + 1) * pageSize);
 	return (
-		<div className="text-sm text-muted-foreground">
-			Showing {start} to {end} out of {tableTotal} records
+		<div className="text-sm font-medium text-slate-500">
+			Showing <span className="text-slate-900">{start}</span> to <span className="text-slate-900">{end}</span> of <span className="text-slate-900">{tableTotal}</span> records
 		</div>
 	);
 }
@@ -726,33 +732,27 @@ function NumberedPagination({
 	const canNext = pageIndex < (pageCount || 1) - 1;
 
 	return (
-		<div className="flex items-center gap-2">
+		<div className="flex items-center gap-1.5">
 			<button
-				className="rounded border border-border px-2 py-1 disabled:opacity-50"
-				onClick={() => onPageChange(0)}
-				disabled={!canPrev}
-				aria-label="First page"
-			>
-				{"<<"}
-			</button>
-			<button
-				className="rounded border border-border px-2 py-1 disabled:opacity-50"
+				className="rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
 				onClick={() => onPageChange(pageIndex - 1)}
 				disabled={!canPrev}
 				aria-label="Previous page"
 			>
-				Previous
+				Prev
 			</button>
 			{pages.map((p, idx) =>
 				p === "ellipsis" ? (
-					<span key={`e-${idx}`} className="px-2 text-muted-foreground">
+					<span key={`e-${idx}`} className="px-2 text-slate-400 font-medium">
 						…
 					</span>
 				) : (
 					<button
 						key={p}
-						className={`rounded px-3 py-1 border ${
-							pageIndex === toIndex(p) ? "bg-black text-white border-black" : "border-border"
+						className={`rounded-md min-w-[32px] px-2 py-1.5 text-sm font-medium transition-colors ${
+							pageIndex === toIndex(p) 
+								? "bg-[#FF5A5F] text-white border border-[#FF5A5F] shadow-sm" 
+								: "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-slate-900"
 						}`}
 						onClick={() => onPageChange(toIndex(p))}
 						aria-current={pageIndex === toIndex(p) ? "page" : undefined}
@@ -762,23 +762,13 @@ function NumberedPagination({
 				)
 			)}
 			<button
-				className="rounded border border-border px-2 py-1 disabled:opacity-50"
+				className="rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
 				onClick={() => onPageChange(pageIndex + 1)}
 				disabled={!canNext}
 				aria-label="Next page"
 			>
 				Next
 			</button>
-			<button
-				className="rounded border border-border px-2 py-1 disabled:opacity-50"
-				onClick={() => onPageChange((pageCount || 1) - 1)}
-				disabled={!canNext}
-				aria-label="Last page"
-			>
-				{">>"}
-			</button>
 		</div>
 	);
 }
-
-

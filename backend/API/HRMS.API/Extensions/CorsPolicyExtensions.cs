@@ -1,4 +1,4 @@
-﻿namespace HRMS.API.Extensions
+namespace HRMS.API.Extensions
 {
     public static class CorsPolicyExtensions
     {
@@ -18,7 +18,16 @@
                     {
                         builder.WithOrigins(allowedOrigins)
                             .AllowAnyMethod()
-                            .AllowAnyHeader();
+                            .AllowAnyHeader()
+                            .AllowCredentials();
+                    }
+                    else
+                    {
+                        // Fallback: allow localhost:3000 in development
+                        builder.WithOrigins("http://localhost:3000")
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .AllowCredentials();
                     }
                 });
             });
